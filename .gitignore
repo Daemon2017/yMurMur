@@ -1,0 +1,9 @@
+.github/
+.ipynb_checkpoints/
+.idea/
+murka/
+requests/
+*.csv
+*.log
+*.rs
+*.pkl
