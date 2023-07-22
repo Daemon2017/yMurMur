@@ -3,7 +3,7 @@ import shutil
 import subprocess
 import uuid
 
-import pydotplus
+import pydot
 
 markers_names = '393,390,D19,391,385a,385b,426,388,439,3891,392,3892,458,459a,459b,455,454,447,437,448,449,464a,464b,' \
                 '464c,464d,460,GATA,YCAa,YCAb,456,607,576,570,CDYa,CDYb,442,438,531,578,395a,395b,590,537,641,472,' \
@@ -15,8 +15,8 @@ mutation_rate = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7
                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 
 
-def prepare_body(request_id, rq):
-    body_string = rq \
+def prepare_body(request_id, data):
+    body_string = data \
         .decode('utf-8') \
         .replace(", ", ",") \
         .replace("-", ",")
@@ -193,26 +193,28 @@ def create_dot(request_id, seq_path):
     print(f'DOT-file for RQ {request_id} created.')
 
 
-def create_png(request_id, viz_path):
+def create_png(request_id, viz_path, rankdir):
     output_path = f'{viz_path}\\output'
     for dot_filename in os.listdir(output_path):
         png_filename = dot_filename.replace(".dot", ".png")
         dot_filename_path = f'{output_path}\\{dot_filename}'
-        graph = pydotplus.graph_from_dot_file(dot_filename_path)
+        graph = pydot.graph_from_dot_file(dot_filename_path)
+        graph[0].set_graph_defaults(rankdir=rankdir)
         png_filename_path = f'{output_path}\\{png_filename}'
-        graph.write_png(png_filename_path)
+        graph[0].write_png(png_filename_path)
         os.remove(dot_filename_path)
     print(f'PNG-file for RQ {request_id} created.')
 
 
-def create_pdf(request_id, viz_path):
+def create_pdf(request_id, viz_path, rankdir):
     output_path = f'{viz_path}\\output'
     for dot_filename in os.listdir(output_path):
         pdf_filename = dot_filename.replace(".dot", ".pdf")
         dot_filename_path = f'{output_path}\\{dot_filename}'
-        graph = pydotplus.graph_from_dot_file(dot_filename_path)
+        graph = pydot.graph_from_dot_file(dot_filename_path)
+        graph[0].set_graph_defaults(rankdir=rankdir)
         pdf_filename_path = f'{output_path}\\{pdf_filename}'
-        graph.write_pdf(pdf_filename_path)
+        graph[0].write_pdf(pdf_filename_path)
         os.remove(dot_filename_path)
     print(f'PDF-file for RQ {request_id} created.')
 
@@ -235,10 +237,10 @@ def is_valid_uuid(val):
         return False
 
 
-def process_txt(rq, request_id):
+def process_txt(data, request_id):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    body_rows = prepare_body(request_id, rq)
+    body_rows = prepare_body(request_id, data)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
@@ -246,25 +248,25 @@ def process_txt(rq, request_id):
     create_zip(request_id, viz_path)
 
 
-def process_png(rq, request_id):
+def process_png(data, request_id, headers):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    body_rows = prepare_body(request_id, rq)
+    body_rows = prepare_body(request_id, data)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path)
-    create_png(request_id, viz_path)
+    create_png(request_id, viz_path, headers['rankdir'])
     create_zip(request_id, viz_path)
 
 
-def process_pdf(rq, request_id):
+def process_pdf(data, request_id, headers):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    body_rows = prepare_body(request_id, rq)
+    body_rows = prepare_body(request_id, data)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path)
-    create_pdf(request_id, viz_path)
+    create_pdf(request_id, viz_path, headers['rankdir'])
     create_zip(request_id, viz_path)

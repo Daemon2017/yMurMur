@@ -26,7 +26,7 @@ def request_png():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_png: {request_id}')
     Thread(target=process_png,
-           args=(request.data, request_id)).start()
+           args=(request.data, request_id, request.headers)).start()
     return Response(json.dumps(dict(requestId=request_id)),
                     mimetype='application/json')
 
@@ -36,7 +36,7 @@ def request_pdf():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_pdf: {request_id}')
     Thread(target=process_pdf,
-           args=(request.data, request_id)).start()
+           args=(request.data, request_id, request.headers)).start()
     return Response(json.dumps(dict(requestId=request_id)),
                     mimetype='application/json')
 
