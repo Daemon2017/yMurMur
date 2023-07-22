@@ -21,8 +21,9 @@ def prepare_body(request_id, rq):
         .replace(", ", ",") \
         .replace("-", ",")
     body_rows = body_string.splitlines()
-    body_rows[0] = markers_names
-    body_rows[1] = mutation_rate
+    markers_count = len(body_rows[4].split(','))
+    body_rows[0] = ','.join(markers_names.split(',')[:markers_count])
+    body_rows[1] = ','.join(mutation_rate.split(',')[:markers_count])
     del body_rows[3:6]
     print(f'RQ body {request_id} prepared.')
     return body_rows
