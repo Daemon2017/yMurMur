@@ -15,13 +15,16 @@ mutation_rate = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7
                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 
 
-def prepare_body(request_id, data):
+def prepare_data(data):
     body_string = data \
         .decode('utf-8') \
         .replace(", ", ",") \
         .replace("-", ",")
     body_rows = body_string.splitlines()
-    markers_count = len(body_rows[4].split(','))
+    return body_rows
+
+
+def prepare_body(request_id, body_rows, markers_count):
     body_rows[0] = ','.join(markers_names.split(',')[:markers_count])
     body_rows[1] = ','.join(mutation_rate.split(',')[:markers_count])
     del body_rows[3:6]
@@ -193,26 +196,27 @@ def create_dot(request_id, seq_path):
     print(f'DOT-file for RQ {request_id} created.')
 
 
-def create_png(request_id, viz_path, rankdir):
+def create_png(request_id, viz_path, rankdir, markers_count):
     output_path = f'{viz_path}\\output'
     for dot_filename in os.listdir(output_path):
         png_filename = dot_filename.replace(".dot", ".png")
         dot_filename_path = f'{output_path}\\{dot_filename}'
         graph = pydot.graph_from_dot_file(dot_filename_path)
         graph[0].set_graph_defaults(rankdir=rankdir)
+        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}')
         png_filename_path = f'{output_path}\\{png_filename}'
         graph[0].write_png(png_filename_path)
         os.remove(dot_filename_path)
     print(f'PNG-file for RQ {request_id} created.')
 
 
-def create_pdf(request_id, viz_path, rankdir):
+def create_pdf(request_id, viz_path, rankdir, markers_count):
     output_path = f'{viz_path}\\output'
     for dot_filename in os.listdir(output_path):
         pdf_filename = dot_filename.replace(".dot", ".pdf")
         dot_filename_path = f'{output_path}\\{dot_filename}'
         graph = pydot.graph_from_dot_file(dot_filename_path)
-        graph[0].set_graph_defaults(rankdir=rankdir)
+        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}')
         pdf_filename_path = f'{output_path}\\{pdf_filename}'
         graph[0].write_pdf(pdf_filename_path)
         os.remove(dot_filename_path)
@@ -240,7 +244,9 @@ def is_valid_uuid(val):
 def process_txt(data, request_id):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    body_rows = prepare_body(request_id, data)
+    data = prepare_data(data)
+    markers_count = len(data[4].split(','))
+    body_rows = prepare_body(request_id, data, markers_count)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
@@ -251,22 +257,26 @@ def process_txt(data, request_id):
 def process_png(data, request_id, headers):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    body_rows = prepare_body(request_id, data)
+    data = prepare_data(data)
+    markers_count = len(data[4].split(','))
+    body_rows = prepare_body(request_id, data, markers_count)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path)
-    create_png(request_id, viz_path, headers['rankdir'])
+    create_png(request_id, viz_path, headers['rankdir'], markers_count)
     create_zip(request_id, viz_path)
 
 
 def process_pdf(data, request_id, headers):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    body_rows = prepare_body(request_id, data)
+    data = prepare_data(data)
+    markers_count = len(data[4].split(','))
+    body_rows = prepare_body(request_id, data, markers_count)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path)
-    create_pdf(request_id, viz_path, headers['rankdir'])
+    create_pdf(request_id, viz_path, headers['rankdir'], markers_count)
     create_zip(request_id, viz_path)
