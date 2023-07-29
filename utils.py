@@ -15,13 +15,13 @@ mutation_rate = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7
                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 
 
-def prepare_data(data):
-    body_string = data \
+def prepare_rows(data):
+    prepared_string = data \
         .decode('utf-8') \
         .replace(", ", ",") \
         .replace("-", ",")
-    body_rows = body_string.splitlines()
-    return body_rows
+    rows = prepared_string.splitlines()
+    return rows
 
 
 def prepare_body(request_id, body_rows, markers_count):
@@ -244,9 +244,9 @@ def is_valid_uuid(val):
 def process_txt(data, request_id):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    data = prepare_data(data)
-    markers_count = len(data[4].split(','))
-    body_rows = prepare_body(request_id, data, markers_count)
+    rows = prepare_rows(data)
+    markers_count = len(rows[4].split(','))
+    body_rows = prepare_body(request_id, rows, markers_count)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
@@ -257,9 +257,9 @@ def process_txt(data, request_id):
 def process_png(data, request_id, headers):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    data = prepare_data(data)
-    markers_count = len(data[4].split(','))
-    body_rows = prepare_body(request_id, data, markers_count)
+    rows = prepare_rows(data)
+    markers_count = len(rows[4].split(','))
+    body_rows = prepare_body(request_id, rows, markers_count)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
@@ -271,9 +271,9 @@ def process_png(data, request_id, headers):
 def process_pdf(data, request_id, headers):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    data = prepare_data(data)
-    markers_count = len(data[4].split(','))
-    body_rows = prepare_body(request_id, data, markers_count)
+    rows = prepare_rows(data)
+    markers_count = len(rows[4].split(','))
+    body_rows = prepare_body(request_id, rows, markers_count)
     create_folders(request_id, seq_path, viz_path)
     create_ych(body_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
