@@ -7,7 +7,7 @@ from flask import Flask, Response, request, send_file
 from waitress import serve
 
 from utils import is_valid_uuid, process_txt, process_png, process_pdf, split_rows, get_modal_markers_count, \
-    get_haplotypes_count, replace_rows
+    get_haplotypes_count, replace_rows, is_same_size
 
 app = Flask(__name__)
 
@@ -21,11 +21,16 @@ def request_txt():
     if modal_markers_count <= 111:
         haplotypes_count = get_haplotypes_count(splitted_rows)
         if haplotypes_count > 1:
-            replaced_rows = replace_rows(splitted_rows, modal_markers_count)
-            Thread(target=process_txt,
-                   args=(request_id, replaced_rows)).start()
-            return Response(json.dumps(dict(requestId=request_id)),
-                            mimetype='application/json')
+            if is_same_size(splitted_rows, modal_markers_count):
+                replaced_rows = replace_rows(splitted_rows, modal_markers_count)
+                Thread(target=process_txt,
+                       args=(request_id, replaced_rows)).start()
+                return Response(json.dumps(dict(requestId=request_id)),
+                                mimetype='application/json')
+            else:
+                return Response(json.dumps(dict(error="All haplotypes must be the same length "
+                                                      "as the modal haplotype!")),
+                                mimetype='application/json')
         else:
             return Response(json.dumps(dict(error="In the set, in addition to the modal, "
                                                   "there must be more than 1 haplotype!")),
@@ -44,11 +49,16 @@ def request_png():
     if modal_markers_count <= 111:
         haplotypes_count = get_haplotypes_count(splitted_rows)
         if haplotypes_count > 1:
-            replaced_rows = replace_rows(splitted_rows, modal_markers_count)
-            Thread(target=process_png,
-                   args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
-            return Response(json.dumps(dict(requestId=request_id)),
-                            mimetype='application/json')
+            if is_same_size(splitted_rows, modal_markers_count):
+                replaced_rows = replace_rows(splitted_rows, modal_markers_count)
+                Thread(target=process_png,
+                       args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
+                return Response(json.dumps(dict(requestId=request_id)),
+                                mimetype='application/json')
+            else:
+                return Response(json.dumps(dict(error="All haplotypes must be the same length "
+                                                      "as the modal haplotype!")),
+                                mimetype='application/json')
         else:
             return Response(json.dumps(dict(error="In the set, in addition to the modal, "
                                                   "there must be more than 1 haplotype!")),
@@ -67,11 +77,16 @@ def request_pdf():
     if modal_markers_count <= 111:
         haplotypes_count = get_haplotypes_count(splitted_rows)
         if haplotypes_count > 1:
-            replaced_rows = replace_rows(splitted_rows, modal_markers_count)
-            Thread(target=process_pdf,
-                   args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
-            return Response(json.dumps(dict(requestId=request_id)),
-                            mimetype='application/json')
+            if is_same_size(splitted_rows, modal_markers_count):
+                replaced_rows = replace_rows(splitted_rows, modal_markers_count)
+                Thread(target=process_pdf,
+                       args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
+                return Response(json.dumps(dict(requestId=request_id)),
+                                mimetype='application/json')
+            else:
+                return Response(json.dumps(dict(error="All haplotypes must be the same length "
+                                                      "as the modal haplotype!")),
+                                mimetype='application/json')
         else:
             return Response(json.dumps(dict(error="In the set, in addition to the modal, "
                                                   "there must be more than 1 haplotype!")),

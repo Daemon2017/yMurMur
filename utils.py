@@ -36,6 +36,15 @@ def get_haplotypes_count(prepared_rows):
     return haplotypes_count
 
 
+def is_same_size(prepared_rows, modal_markers_count):
+    for row in prepared_rows[6:]:
+        splitted_row = row.split(',')
+        if len(splitted_row) > 1:
+            if len(splitted_row) != modal_markers_count:
+                return False
+    return True
+
+
 def replace_rows(splitted_rows, modal_markers_count):
     splitted_rows[0] = ','.join(markers_names.split(',')[:modal_markers_count])
     splitted_rows[1] = ','.join(mutation_rate.split(',')[:modal_markers_count])
