@@ -6,7 +6,8 @@ from threading import Thread
 from flask import Flask, Response, request, send_file
 from waitress import serve
 
-from utils import is_valid_uuid, process_txt, process_png, process_pdf
+from utils import is_valid_uuid, process_txt, process_png, process_pdf, split_rows, get_modal_markers_count, \
+    get_haplotypes_count, replace_rows
 
 app = Flask(__name__)
 
@@ -15,8 +16,11 @@ app = Flask(__name__)
 def request_txt():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_txt: {request_id}')
+    splitted_rows = split_rows(request.data)
+    modal_markers_count = get_modal_markers_count(splitted_rows)
+    replaced_rows = replace_rows(splitted_rows, modal_markers_count)
     Thread(target=process_txt,
-           args=(request.data, request_id)).start()
+           args=(request_id, replaced_rows)).start()
     return Response(json.dumps(dict(requestId=request_id)),
                     mimetype='application/json')
 
@@ -25,8 +29,12 @@ def request_txt():
 def request_png():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_png: {request_id}')
+    splitted_rows = split_rows(request.data)
+    modal_markers_count = get_modal_markers_count(splitted_rows)
+    haplotypes_count = get_haplotypes_count(splitted_rows)
+    replaced_rows = replace_rows(splitted_rows, modal_markers_count)
     Thread(target=process_png,
-           args=(request.data, request_id, request.headers)).start()
+           args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
     return Response(json.dumps(dict(requestId=request_id)),
                     mimetype='application/json')
 
@@ -35,8 +43,12 @@ def request_png():
 def request_pdf():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_pdf: {request_id}')
+    splitted_rows = split_rows(request.data)
+    modal_markers_count = get_modal_markers_count(splitted_rows)
+    haplotypes_count = get_haplotypes_count(splitted_rows)
+    replaced_rows = replace_rows(splitted_rows, modal_markers_count)
     Thread(target=process_pdf,
-           args=(request.data, request_id, request.headers)).start()
+           args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
     return Response(json.dumps(dict(requestId=request_id)),
                     mimetype='application/json')
 

@@ -15,21 +15,32 @@ mutation_rate = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7
                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 
 
-def prepare_rows(data):
+def split_rows(data):
     prepared_string = data \
         .decode('utf-8') \
         .replace(", ", ",") \
         .replace("-", ",")
-    rows = prepared_string.splitlines()
-    return rows
+    splitted_rows = prepared_string.splitlines()
+    return splitted_rows
 
 
-def prepare_body(request_id, body_rows, markers_count):
-    body_rows[0] = ','.join(markers_names.split(',')[:markers_count])
-    body_rows[1] = ','.join(mutation_rate.split(',')[:markers_count])
-    del body_rows[3:6]
-    print(f'RQ body {request_id} prepared.')
-    return body_rows
+def get_modal_markers_count(prepared_rows):
+    return len(prepared_rows[4].split(','))
+
+
+def get_haplotypes_count(prepared_rows):
+    haplotypes_count = 0
+    for row in prepared_rows[6:]:
+        if len(row.split(',')) > 1:
+            haplotypes_count += 1
+    return haplotypes_count
+
+
+def replace_rows(splitted_rows, modal_markers_count):
+    splitted_rows[0] = ','.join(markers_names.split(',')[:modal_markers_count])
+    splitted_rows[1] = ','.join(mutation_rate.split(',')[:modal_markers_count])
+    del splitted_rows[3:6]
+    return splitted_rows
 
 
 def create_folders(request_id, seq_path, viz_path):
@@ -196,27 +207,27 @@ def create_dot(request_id, seq_path):
     print(f'DOT-file for RQ {request_id} created.')
 
 
-def create_png(request_id, viz_path, rankdir, markers_count):
+def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     output_path = f'{viz_path}\\output'
     for dot_filename in os.listdir(output_path):
         png_filename = dot_filename.replace(".dot", ".png")
         dot_filename_path = f'{output_path}\\{dot_filename}'
         graph = pydot.graph_from_dot_file(dot_filename_path)
         graph[0].set_graph_defaults(rankdir=rankdir)
-        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}')
+        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
         png_filename_path = f'{output_path}\\{png_filename}'
         graph[0].write_png(png_filename_path)
         os.remove(dot_filename_path)
     print(f'PNG-file for RQ {request_id} created.')
 
 
-def create_pdf(request_id, viz_path, rankdir, markers_count):
+def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     output_path = f'{viz_path}\\output'
     for dot_filename in os.listdir(output_path):
         pdf_filename = dot_filename.replace(".dot", ".pdf")
         dot_filename_path = f'{output_path}\\{dot_filename}'
         graph = pydot.graph_from_dot_file(dot_filename_path)
-        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}')
+        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
         pdf_filename_path = f'{output_path}\\{pdf_filename}'
         graph[0].write_pdf(pdf_filename_path)
         os.remove(dot_filename_path)
@@ -241,42 +252,33 @@ def is_valid_uuid(val):
         return False
 
 
-def process_txt(data, request_id):
+def process_txt(request_id, prepared_rows):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    rows = prepare_rows(data)
-    markers_count = len(rows[4].split(','))
-    body_rows = prepare_body(request_id, rows, markers_count)
     create_folders(request_id, seq_path, viz_path)
-    create_ych(body_rows, request_id, seq_path)
+    create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_txt(request_id, seq_path)
     create_zip(request_id, viz_path)
 
 
-def process_png(data, request_id, headers):
+def process_png(request_id, prepared_rows, headers, modal_markers_count, haplotypes_count):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    rows = prepare_rows(data)
-    markers_count = len(rows[4].split(','))
-    body_rows = prepare_body(request_id, rows, markers_count)
     create_folders(request_id, seq_path, viz_path)
-    create_ych(body_rows, request_id, seq_path)
+    create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path)
-    create_png(request_id, viz_path, headers['rankdir'], markers_count)
+    create_png(request_id, viz_path, headers['rankdir'], modal_markers_count, haplotypes_count)
     create_zip(request_id, viz_path)
 
 
-def process_pdf(data, request_id, headers):
+def process_pdf(request_id, prepared_rows, headers, modal_markers_count, haplotypes_count):
     seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
     viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
-    rows = prepare_rows(data)
-    markers_count = len(rows[4].split(','))
-    body_rows = prepare_body(request_id, rows, markers_count)
     create_folders(request_id, seq_path, viz_path)
-    create_ych(body_rows, request_id, seq_path)
+    create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path)
-    create_pdf(request_id, viz_path, headers['rankdir'], markers_count)
+    create_pdf(request_id, viz_path, headers['rankdir'], modal_markers_count, haplotypes_count)
     create_zip(request_id, viz_path)
