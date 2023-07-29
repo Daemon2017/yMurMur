@@ -6,8 +6,8 @@ from threading import Thread
 from flask import Flask, Response, request, send_file
 from waitress import serve
 
-from utils import is_valid_uuid, process_txt, process_png, process_pdf, split_rows, get_modal_markers_count, \
-    get_haplotypes_count, replace_rows, is_same_size
+from utils import is_valid_uuid, process_txt, process_png, process_pdf, get_rows, get_modal_markers_count, \
+    get_haplotypes_count, get_prepared_rows, is_same_size
 
 app = Flask(__name__)
 
@@ -16,15 +16,15 @@ app = Flask(__name__)
 def request_txt():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_txt: {request_id}')
-    splitted_rows = split_rows(request.data)
-    modal_markers_count = get_modal_markers_count(splitted_rows)
+    rows = get_rows(request.data)
+    modal_markers_count = get_modal_markers_count(rows)
     if modal_markers_count <= 111:
-        haplotypes_count = get_haplotypes_count(splitted_rows)
+        haplotypes_count = get_haplotypes_count(rows)
         if haplotypes_count > 1:
-            if is_same_size(splitted_rows, modal_markers_count):
-                replaced_rows = replace_rows(splitted_rows, modal_markers_count)
+            if is_same_size(rows, modal_markers_count):
+                prepared_rows = get_prepared_rows(rows, modal_markers_count)
                 Thread(target=process_txt,
-                       args=(request_id, replaced_rows)).start()
+                       args=(request_id, prepared_rows)).start()
                 return Response(json.dumps(dict(requestId=request_id)),
                                 mimetype='application/json')
             else:
@@ -44,15 +44,15 @@ def request_txt():
 def request_png():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_png: {request_id}')
-    splitted_rows = split_rows(request.data)
-    modal_markers_count = get_modal_markers_count(splitted_rows)
+    rows = get_rows(request.data)
+    modal_markers_count = get_modal_markers_count(rows)
     if modal_markers_count <= 111:
-        haplotypes_count = get_haplotypes_count(splitted_rows)
+        haplotypes_count = get_haplotypes_count(rows)
         if haplotypes_count > 1:
-            if is_same_size(splitted_rows, modal_markers_count):
-                replaced_rows = replace_rows(splitted_rows, modal_markers_count)
+            if is_same_size(rows, modal_markers_count):
+                prepared_rows = get_prepared_rows(rows, modal_markers_count)
                 Thread(target=process_png,
-                       args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
+                       args=(request_id, prepared_rows, request.headers, modal_markers_count, haplotypes_count)).start()
                 return Response(json.dumps(dict(requestId=request_id)),
                                 mimetype='application/json')
             else:
@@ -72,15 +72,15 @@ def request_png():
 def request_pdf():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_pdf: {request_id}')
-    splitted_rows = split_rows(request.data)
-    modal_markers_count = get_modal_markers_count(splitted_rows)
+    rows = get_rows(request.data)
+    modal_markers_count = get_modal_markers_count(rows)
     if modal_markers_count <= 111:
-        haplotypes_count = get_haplotypes_count(splitted_rows)
+        haplotypes_count = get_haplotypes_count(rows)
         if haplotypes_count > 1:
-            if is_same_size(splitted_rows, modal_markers_count):
-                replaced_rows = replace_rows(splitted_rows, modal_markers_count)
+            if is_same_size(rows, modal_markers_count):
+                prepared_rows = get_prepared_rows(rows, modal_markers_count)
                 Thread(target=process_pdf,
-                       args=(request_id, replaced_rows, request.headers, modal_markers_count, haplotypes_count)).start()
+                       args=(request_id, prepared_rows, request.headers, modal_markers_count, haplotypes_count)).start()
                 return Response(json.dumps(dict(requestId=request_id)),
                                 mimetype='application/json')
             else:

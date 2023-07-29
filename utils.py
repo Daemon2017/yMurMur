@@ -15,13 +15,12 @@ mutation_rate = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7
                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 
 
-def split_rows(data):
-    prepared_string = data \
+def get_rows(data):
+    return data \
         .decode('utf-8') \
         .replace(", ", ",") \
-        .replace("-", ",")
-    splitted_rows = prepared_string.splitlines()
-    return splitted_rows
+        .replace("-", ",") \
+        .splitlines()
 
 
 def get_modal_markers_count(prepared_rows):
@@ -45,11 +44,11 @@ def is_same_size(prepared_rows, modal_markers_count):
     return True
 
 
-def replace_rows(splitted_rows, modal_markers_count):
-    splitted_rows[0] = ','.join(markers_names.split(',')[:modal_markers_count])
-    splitted_rows[1] = ','.join(mutation_rate.split(',')[:modal_markers_count])
-    del splitted_rows[3:6]
-    return splitted_rows
+def get_prepared_rows(rows, modal_markers_count):
+    rows[0] = ','.join(markers_names.split(',')[:modal_markers_count])
+    rows[1] = ','.join(mutation_rate.split(',')[:modal_markers_count])
+    del rows[3:6]
+    return rows
 
 
 def create_folders(request_id, seq_path, viz_path):
