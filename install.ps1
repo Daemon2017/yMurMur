@@ -3,6 +3,11 @@ Expand-Archive "murka-1.4.1-win64.zip" -DestinationPath "murka-1.4.1-win64"
 Move-Item -Path "./murka-1.4.1-win64/murka-1.4.1-win64" -Destination "./murka" -force
 Remove-Item -Path "./murka-1.4.1-win64.zip"
 Remove-Item -Path "./murka-1.4.1-win64"
+Invoke-WebRequest "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.50.0/windows_10_msbuild_Release_graphviz-2.50.0-win32.zip" -OutFile "graphviz-2.50.0-win32.zip"
+Expand-Archive "graphviz-2.50.0-win32.zip" -DestinationPath "graphviz-2.50.0-win32"
+Move-Item -Path "./graphviz-2.50.0-win32/Graphviz" -Destination "./graphviz" -force
+Remove-Item -Path "./graphviz-2.50.0-win32.zip"
+Remove-Item -Path "./graphviz-2.50.0-win32"
 Invoke-WebRequest "https://www.python.org/ftp/python/3.10.11/python-3.10.11-embed-win32.zip" -OutFile "python-3.10.11-embed-win32.zip"
 Expand-Archive "python-3.10.11-embed-win32.zip" -DestinationPath "python"
 Remove-Item -Path "./python-3.10.11-embed-win32.zip"

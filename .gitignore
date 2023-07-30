@@ -4,6 +4,7 @@
 murka/
 requests/
 python/
+graphviz/
 *.csv
 *.log
 *.rs
