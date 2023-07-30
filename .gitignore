@@ -3,6 +3,7 @@
 .idea/
 murka/
 requests/
+python/
 *.csv
 *.log
 *.rs
