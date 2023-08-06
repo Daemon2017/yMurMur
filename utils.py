@@ -54,13 +54,13 @@ def get_prepared_rows(rows, modal_markers_count):
 def create_folders(request_id, seq_path, viz_path):
     os.makedirs(seq_path,
                 exist_ok=True)
-    os.makedirs(f'{viz_path}\\output',
+    os.makedirs(f'{viz_path}/output',
                 exist_ok=True)
     print(f'Folders for RQ {request_id} created.')
 
 
 def create_ych(body_rows, request_id, seq_path):
-    with open(f'{seq_path}\\request.ych',
+    with open(f'{seq_path}/request.ych',
               'w',
               encoding='utf-8') as text_file:
         for row in body_rows:
@@ -69,30 +69,30 @@ def create_ych(body_rows, request_id, seq_path):
 
 
 def create_rdf(request_id, seq_path):
-    prepare_args = '{0}\\murka\\prepare.exe ' \
+    prepare_args = '{0}/murka/prepare.exe ' \
                    '-T "YCH2RDF" ' \
                    '-S "VB" ' \
                    '-V "VP" ' \
                    '-I "1" ' \
                    '-F "20.0" ' \
-                   '-i "{1}\\request.ych" ' \
-                   '-o "{1}\\request.rdf" ' \
-                   '-s "{0}\\murka\\data\\metric\\ymx" ' \
+                   '-i "{1}/request.ych" ' \
+                   '-o "{1}/request.rdf" ' \
+                   '-s "{0}/murka/data/metric/ymx" ' \
                    '-p "INEQ|MX" ' \
                    '-d 2 ' \
                    '-n 2'.format(os.getcwd(), seq_path)
     subprocess.run(prepare_args,
                    shell=False,
                    check=False,
-                   cwd=f'{os.getcwd()}\\murka')
-    ych_path = f"{seq_path}\\request.ych"
+                   cwd=f'{os.getcwd()}/murka')
+    ych_path = f"{seq_path}/request.ych"
     if os.path.exists(ych_path):
         os.remove(ych_path)
     print(f'RDF-file for RQ {request_id} created.')
 
 
 def create_txt(request_id, seq_path):
-    murka_args = '{0}\\murka\\murka.exe ' \
+    murka_args = '{0}/murka/murka.exe ' \
                  '-T "MJ" ' \
                  '-S "VB|RSW|EM|THR2" ' \
                  '-V "VP|VL|VR" ' \
@@ -118,8 +118,8 @@ def create_txt(request_id, seq_path):
                  '-n 100 ' \
                  '-l 10 ' \
                  '-t "RDF" ' \
-                 '-i "{2}\\request.rdf" ' \
-                 '-r "{0}\\murka\\data\\metric\\states_str0050ineq_2_2" ' \
+                 '-i "{2}/request.rdf" ' \
+                 '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
                  '-d 0.8 ' \
                  '-o "SEQTABLE|TAXATABLE|CHARTABLE|CHARCHNGTABLE|NW|NWEXT|STAT|STP|MPCOMPTABLE|MPRFTDMATRIX|MPPARTTABLE|MPTOPOTABLE|CHARSTTABLE|DMATRIX" ' \
                  '-c "inn_" ' \
@@ -139,13 +139,13 @@ def create_txt(request_id, seq_path):
                  '-R "tcmptbl" ' \
                  '-B "parttbl" ' \
                  '-L "topotbl" ' \
-                 '-G "TRDF; 4; ROOTPREFERRED|DIST|CHNAMES|CHCHNG|TXFR|ROOTONLY|TREEONLY|NOPOOL|NOSEQ|MPPART; 4; 3; 0.0; 0.0; ; ; ; ; viz\\{1}\\output\\nw#.txt; ; ; ; "' \
+                 '-G "TRDF; 4; ROOTPREFERRED|DIST|CHNAMES|CHCHNG|TXFR|ROOTONLY|TREEONLY|NOPOOL|NOSEQ|MPPART; 4; 3; 0.0; 0.0; ; ; ; ; viz/{1}/output/nw#.txt; ; ; ; "' \
         .format(os.getcwd(), request_id, seq_path)
     subprocess.run(murka_args,
                    shell=False,
                    check=False,
-                   cwd=f'{os.getcwd()}\\murka')
-    rdf_path = f"{seq_path}\\request.rdf"
+                   cwd=f'{os.getcwd()}/murka')
+    rdf_path = f"{seq_path}/request.rdf"
     if os.path.exists(rdf_path):
         os.remove(rdf_path)
     if os.path.exists(seq_path):
@@ -154,7 +154,7 @@ def create_txt(request_id, seq_path):
 
 
 def create_dot(request_id, seq_path):
-    murka_args = '{0}\\murka\\murka.exe ' \
+    murka_args = '{0}/murka/murka.exe ' \
                  '-T "MJ" ' \
                  '-S "VB|RSW|EM|THR2" ' \
                  '-V "VP|VL|VR" ' \
@@ -180,8 +180,8 @@ def create_dot(request_id, seq_path):
                  '-n 100 ' \
                  '-l 10 ' \
                  '-t "RDF" ' \
-                 '-i "{2}\\request.rdf" ' \
-                 '-r "{0}\\murka\\data\\metric\\states_str0050ineq_2_2" ' \
+                 '-i "{2}/request.rdf" ' \
+                 '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
                  '-d 0.8 ' \
                  '-o "SEQTABLE|TAXATABLE|CHARTABLE|CHARCHNGTABLE|NW|NWEXT|STAT|STP|MPCOMPTABLE|MPRFTDMATRIX|MPPARTTABLE|MPTOPOTABLE|CHARSTTABLE|DMATRIX" ' \
                  '-c "inn_" ' \
@@ -201,13 +201,13 @@ def create_dot(request_id, seq_path):
                  '-R "tcmptbl" ' \
                  '-B "parttbl" ' \
                  '-L "topotbl" ' \
-                 '-G "GraphViz; 1; ROOTPREFERRED|CHNAMES|CHCHNG|TXNAMES|TXFR|TXFRSZ|TXCD|ROOTONLY|TREEONLY|NOPOOL|AGE|MPPART; 1.8; 1.1; 0.1; 2.0; 86.0; ; ; ; viz\\{1}\\output\\nw#.dot; ; viz\\tpl\\nwtpl.txt; ; "' \
+                 '-G "GraphViz; 1; ROOTPREFERRED|CHNAMES|CHCHNG|TXNAMES|TXFR|TXFRSZ|TXCD|ROOTONLY|TREEONLY|NOPOOL|AGE|MPPART; 1.8; 1.1; 0.1; 2.0; 86.0; ; ; ; viz/{1}/output/nw#.dot; ; viz/tpl/nwtpl.txt; ; "' \
         .format(os.getcwd(), request_id, seq_path)
     subprocess.run(murka_args,
                    shell=False,
                    check=False,
-                   cwd=f'{os.getcwd()}\\murka')
-    rdf_path = f"{seq_path}\\request.rdf"
+                   cwd=f'{os.getcwd()}/murka')
+    rdf_path = f"{seq_path}/request.rdf"
     if os.path.exists(rdf_path):
         os.remove(rdf_path)
     if os.path.exists(seq_path):
@@ -216,35 +216,35 @@ def create_dot(request_id, seq_path):
 
 
 def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
-    output_path = f'{viz_path}\\output'
+    output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
         png_filename = dot_filename.replace(".dot", ".png")
-        dot_filename_path = f'{output_path}\\{dot_filename}'
+        dot_filename_path = f'{output_path}/{dot_filename}'
         graph = pydot.graph_from_dot_file(dot_filename_path)
         graph[0].set_graph_defaults(rankdir=rankdir)
         graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
-        png_filename_path = f'{output_path}\\{png_filename}'
+        png_filename_path = f'{output_path}/{png_filename}'
         graph[0].write_png(png_filename_path)
         os.remove(dot_filename_path)
     print(f'PNG-file for RQ {request_id} created.')
 
 
 def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
-    output_path = f'{viz_path}\\output'
+    output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
         pdf_filename = dot_filename.replace(".dot", ".pdf")
-        dot_filename_path = f'{output_path}\\{dot_filename}'
+        dot_filename_path = f'{output_path}/{dot_filename}'
         graph = pydot.graph_from_dot_file(dot_filename_path)
         graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
-        pdf_filename_path = f'{output_path}\\{pdf_filename}'
+        pdf_filename_path = f'{output_path}/{pdf_filename}'
         graph[0].write_pdf(pdf_filename_path)
         os.remove(dot_filename_path)
     print(f'PDF-file for RQ {request_id} created.')
 
 
 def create_zip(request_id, viz_path):
-    output_path = f'{viz_path}\\output'
-    shutil.make_archive(f'{viz_path}\\result',
+    output_path = f'{viz_path}/output'
+    shutil.make_archive(f'{viz_path}/result',
                         'zip',
                         output_path)
     if os.path.exists(output_path):
@@ -261,8 +261,8 @@ def is_valid_uuid(val):
 
 
 def process_txt(request_id, prepared_rows):
-    seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
-    viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
+    seq_path = f"{os.getcwd()}/murka/data/seq/{request_id}"
+    viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
     create_folders(request_id, seq_path, viz_path)
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
@@ -271,8 +271,8 @@ def process_txt(request_id, prepared_rows):
 
 
 def process_png(request_id, prepared_rows, headers, modal_markers_count, haplotypes_count):
-    seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
-    viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
+    seq_path = f"{os.getcwd()}/murka/data/seq/{request_id}"
+    viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
     create_folders(request_id, seq_path, viz_path)
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
@@ -282,8 +282,8 @@ def process_png(request_id, prepared_rows, headers, modal_markers_count, haploty
 
 
 def process_pdf(request_id, prepared_rows, headers, modal_markers_count, haplotypes_count):
-    seq_path = f"{os.getcwd()}\\murka\\data\\seq\\{request_id}"
-    viz_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}'
+    seq_path = f"{os.getcwd()}/murka/data/seq/{request_id}"
+    viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
     create_folders(request_id, seq_path, viz_path)
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)

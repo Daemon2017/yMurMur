@@ -104,7 +104,7 @@ def response():
     if not is_valid_uuid(request_id):
         return Response(json.dumps(dict(status="Wrong requestId!")),
                         mimetype='application/json')
-    file_path = f'{os.getcwd()}\\murka\\nw\\viz\\{request_id}\\result.zip'
+    file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
     if not os.path.exists(file_path):
         return Response(json.dumps(dict(status="File not ready!")),
                         mimetype='application/json')
