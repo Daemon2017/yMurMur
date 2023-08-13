@@ -73,7 +73,7 @@ def create_rdf(request_id, seq_path):
     if os.name == 'nt':
         prepare_args = '{0}/murka/prepare.exe '.format(os.getcwd())
     else:
-        prepare_args = '{0}/murka/prepare '.format(os.getcwd())
+        prepare_args = '{0}/murka/prepare/prepare '.format(os.getcwd())
     prepare_args += '-T "YCH2RDF" ' \
                     '-S "VB" ' \
                     '-V "VP" ' \
@@ -100,7 +100,7 @@ def create_txt(request_id, seq_path):
     if os.name == 'nt':
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
     else:
-        murka_args = '{0}/murka/murka '.format(os.getcwd())
+        murka_args = '{0}/murka/murka/murka '.format(os.getcwd())
     murka_args += '-T "MJ" ' \
                   '-S "VB|RSW|EM|THR2" ' \
                   '-V "VP|VL|VR" ' \
@@ -166,7 +166,7 @@ def create_dot(request_id, seq_path):
     if os.name == 'nt':
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
     else:
-        murka_args = '{0}/murka/murka '.format(os.getcwd())
+        murka_args = '{0}/murka/murka/murka '.format(os.getcwd())
     murka_args += '-T "MJ" ' \
                   '-S "VB|RSW|EM|THR2" ' \
                   '-V "VP|VL|VR" ' \
