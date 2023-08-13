@@ -86,7 +86,7 @@ def create_rdf(request_id, seq_path):
                     '-d 2 ' \
                     '-n 2'.format(os.getcwd(), seq_path)
     subprocess.run(prepare_args,
-                   shell=False,
+                   shell=True,
                    check=False,
                    cwd=f'{os.getcwd()}/murka')
     ych_path = f"{seq_path}/request.ych"
@@ -150,7 +150,7 @@ def create_txt(request_id, seq_path):
                   '-G "TRDF; 4; ROOTPREFERRED|DIST|CHNAMES|CHCHNG|TXFR|ROOTONLY|TREEONLY|NOPOOL|NOSEQ|MPPART; 4; 3; 0.0; 0.0; ; ; ; ; viz/{1}/output/nw#.txt; ; ; ; "' \
         .format(os.getcwd(), request_id, seq_path)
     subprocess.run(murka_args,
-                   shell=False,
+                   shell=True,
                    check=False,
                    cwd=f'{os.getcwd()}/murka')
     rdf_path = f"{seq_path}/request.rdf"
@@ -216,7 +216,7 @@ def create_dot(request_id, seq_path):
                   '-G "GraphViz; 1; ROOTPREFERRED|CHNAMES|CHCHNG|TXNAMES|TXFR|TXFRSZ|TXCD|ROOTONLY|TREEONLY|NOPOOL|AGE|MPPART; 1.8; 1.1; 0.1; 2.0; 86.0; ; ; ; viz/{1}/output/nw#.dot; ; viz/tpl/nwtpl.txt; ; "' \
         .format(os.getcwd(), request_id, seq_path)
     subprocess.run(murka_args,
-                   shell=False,
+                   shell=True,
                    check=False,
                    cwd=f'{os.getcwd()}/murka')
     rdf_path = f"{seq_path}/request.rdf"
