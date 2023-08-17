@@ -13,6 +13,50 @@ markers_names = '393,390,D19,391,385a,385b,426,388,439,3891,392,3892,458,459a,45
 mutation_rate = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7,13,9,4,6,2,2,2,2,5,19,23,58,27,19,' \
                 '83,10,29,99,7,9,11,5,6,4,21,71,45,3,50,4,3,6,4,13,17,10,11,30,28,18,20,20,20,20,20,20,20,20,20,20,' \
                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
+murka_additional_args = '-T "MJ" ' \
+                        '-S "VB|RSW|EM|THR2" ' \
+                        '-V "VP|VL|VR" ' \
+                        '-I 1 ' \
+                        '-F 20.0 ' \
+                        '-H "N" ' \
+                        '-P "1;1.4;2.25;5000;1;1.4;2.25;5000;0;0.75;500;50;33;" ' \
+                        '-C "0;50;0;" ' \
+                        '-M "0; 0; 0; 0; RESCHECK|FASTUNION|MORETREES; 1; 0; 0; SEP1|NTT|NT1|NT2|NTD|LEUC|PS|SL|NV|LE|PT|PTE|DA|NTDX|EXTV|EXTVDA|EXTVDAP|ASCPRN|EXPV|EXTEEDA; 0; LBDA|UBRSPH|KEEPBND|BNDREPEATS3|BNDPERC2|EXTTEST2|EXTTESTP2|PRUNE3|REDREP3|PROCMSG1|NWPERFMON|REDPMLEV2|COMPLTRAVERSAL|KEEPTREE|OOO1|DEFERPW3; " ' \
+                        '-J 0 ' \
+                        '-X 0 ' \
+                        '-Y 0 ' \
+                        '-U 0 ' \
+                        '-W 0 ' \
+                        '-Z 0 ' \
+                        '-s "BCACHE|DCACHE|THASH" ' \
+                        '-j "CONSTSPLITS|EQSPLITS|PSHELLING|POSTPROC|CONTRACTNT2|ROOTING|ALLOWTERMROOT|MIDPOINTROOT|MSNCACHE|NWGRCACHE|FASTMJ|WPHEUR|MPSTAT|CONSTREE|NWAGE" ' \
+                        '-e 0 ' \
+                        '-x 0 ' \
+                        '-b 100 ' \
+                        '-f "NOFU|NS3|STAPPR|FH" ' \
+                        '-m 0.6 ' \
+                        '-n 100 ' \
+                        '-l 10 ' \
+                        '-t "RDF" ' \
+                        '-d 0.8 ' \
+                        '-o "SEQTABLE|TAXATABLE|CHARTABLE|CHARCHNGTABLE|NW|NWEXT|STAT|STP|MPCOMPTABLE|MPRFTDMATRIX|MPPARTTABLE|MPTOPOTABLE|CHARSTTABLE|DMATRIX" ' \
+                        '-c "inn_" ' \
+                        '-p "nw" ' \
+                        '-q "stat" ' \
+                        '-u "nwlinktbl#" ' \
+                        '-O "seq.rdf" ' \
+                        '-w "distmx" ' \
+                        '-D "charsttbl" ' \
+                        '-z "taxatbl#" ' \
+                        '-a "chartbl#" ' \
+                        '-k "charchngtbl#" ' \
+                        '-A "CONVERT" ' \
+                        '-N 3.465 ' \
+                        '-Q "wtdistmx" ' \
+                        '-K "rftdistmx" ' \
+                        '-R "tcmptbl" ' \
+                        '-B "parttbl" ' \
+                        '-L "topotbl" '
 
 
 def get_rows(data):
@@ -101,51 +145,8 @@ def create_txt(request_id, seq_path):
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
     else:
         murka_args = '{0}/murka/murka/murka '.format(os.getcwd())
-    murka_args += '-T "MJ" ' \
-                  '-S "VB|RSW|EM|THR2" ' \
-                  '-V "VP|VL|VR" ' \
-                  '-I 1 ' \
-                  '-F 20.0 ' \
-                  '-H "N" ' \
-                  '-P "1;1.4;2.25;5000;1;1.4;2.25;5000;0;0.75;500;50;33;" ' \
-                  '-C "0;50;0;" ' \
-                  '-M "0; 0; 0; 0; RESCHECK|FASTUNION|MORETREES; 1; 0; 0; SEP1|NTT|NT1|NT2|NTD|LEUC|PS|SL|NV|LE|PT|PTE|DA|NTDX|EXTV|EXTVDA|EXTVDAP|ASCPRN|EXPV|EXTEEDA; 0; LBDA|UBRSPH|KEEPBND|BNDREPEATS3|BNDPERC2|EXTTEST2|EXTTESTP2|PRUNE3|REDREP3|PROCMSG1|NWPERFMON|REDPMLEV2|COMPLTRAVERSAL|KEEPTREE|OOO1|DEFERPW3; " ' \
-                  '-J 0 ' \
-                  '-X 0 ' \
-                  '-Y 0 ' \
-                  '-U 0 ' \
-                  '-W 0 ' \
-                  '-Z 0 ' \
-                  '-s "BCACHE|DCACHE|THASH" ' \
-                  '-j "CONSTSPLITS|EQSPLITS|PSHELLING|POSTPROC|CONTRACTNT2|ROOTING|ALLOWTERMROOT|MIDPOINTROOT|MSNCACHE|NWGRCACHE|FASTMJ|WPHEUR|MPSTAT|CONSTREE|NWAGE" ' \
-                  '-e 0 ' \
-                  '-x 0 ' \
-                  '-b 100 ' \
-                  '-f "NOFU|NS3|STAPPR|FH" ' \
-                  '-m 0.6 ' \
-                  '-n 100 ' \
-                  '-l 10 ' \
-                  '-t "RDF" ' \
-                  '-d 0.8 ' \
-                  '-o "SEQTABLE|TAXATABLE|CHARTABLE|CHARCHNGTABLE|NW|NWEXT|STAT|STP|MPCOMPTABLE|MPRFTDMATRIX|MPPARTTABLE|MPTOPOTABLE|CHARSTTABLE|DMATRIX" ' \
-                  '-c "inn_" ' \
-                  '-p "nw" ' \
-                  '-q "stat" ' \
-                  '-u "nwlinktbl#" ' \
-                  '-O "seq.rdf" ' \
-                  '-w "distmx" ' \
-                  '-D "charsttbl" ' \
-                  '-z "taxatbl#" ' \
-                  '-a "chartbl#" ' \
-                  '-k "charchngtbl#" ' \
-                  '-A "CONVERT" ' \
-                  '-N 3.465 ' \
-                  '-Q "wtdistmx" ' \
-                  '-K "rftdistmx" ' \
-                  '-R "tcmptbl" ' \
-                  '-B "parttbl" ' \
-                  '-L "topotbl" ' \
-                  '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
+    murka_args += murka_additional_args
+    murka_args += '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
                   '-G "TRDF; 4; ROOTPREFERRED|DIST|CHNAMES|CHCHNG|TXFR|ROOTONLY|TREEONLY|NOPOOL|NOSEQ|MPPART; 4; 3; 0.0; 0.0; ; ; ; ; viz/{1}/output/nw#.txt; ; ; ; " ' \
                   '-i "{2}/request.rdf" ' \
         .format(os.getcwd(), request_id, seq_path)
@@ -167,51 +168,8 @@ def create_dot(request_id, seq_path):
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
     else:
         murka_args = '{0}/murka/murka/murka '.format(os.getcwd())
-    murka_args += '-T "MJ" ' \
-                  '-S "VB|RSW|EM|THR2" ' \
-                  '-V "VP|VL|VR" ' \
-                  '-I 1 ' \
-                  '-F 20.0 ' \
-                  '-H "N" ' \
-                  '-P "1;1.4;2.25;5000;1;1.4;2.25;5000;0;0.75;500;50;33;" ' \
-                  '-C "0;50;0;" ' \
-                  '-M "0; 0; 0; 0; RESCHECK|FASTUNION|MORETREES; 1; 0; 0; SEP1|NTT|NT1|NT2|NTD|LEUC|PS|SL|NV|LE|PT|PTE|DA|NTDX|EXTV|EXTVDA|EXTVDAP|ASCPRN|EXPV|EXTEEDA; 0; LBDA|UBRSPH|KEEPBND|BNDREPEATS3|BNDPERC2|EXTTEST2|EXTTESTP2|PRUNE3|REDREP3|PROCMSG1|NWPERFMON|REDPMLEV2|COMPLTRAVERSAL|KEEPTREE|OOO1|DEFERPW3; " ' \
-                  '-J 0 ' \
-                  '-X 0 ' \
-                  '-Y 0 ' \
-                  '-U 0 ' \
-                  '-W 0 ' \
-                  '-Z 0 ' \
-                  '-s "BCACHE|DCACHE|THASH" ' \
-                  '-j "CONSTSPLITS|EQSPLITS|PSHELLING|POSTPROC|CONTRACTNT2|ROOTING|ALLOWTERMROOT|MIDPOINTROOT|MSNCACHE|NWGRCACHE|FASTMJ|WPHEUR|MPSTAT|CONSTREE|NWAGE" ' \
-                  '-e 0 ' \
-                  '-x 0 ' \
-                  '-b 100 ' \
-                  '-f "NOFU|NS3|STAPPR|FH" ' \
-                  '-m 0.6 ' \
-                  '-n 100 ' \
-                  '-l 10 ' \
-                  '-t "RDF" ' \
-                  '-d 0.8 ' \
-                  '-o "SEQTABLE|TAXATABLE|CHARTABLE|CHARCHNGTABLE|NW|NWEXT|STAT|STP|MPCOMPTABLE|MPRFTDMATRIX|MPPARTTABLE|MPTOPOTABLE|CHARSTTABLE|DMATRIX" ' \
-                  '-c "inn_" ' \
-                  '-p "nw" ' \
-                  '-q "stat" ' \
-                  '-u "nwlinktbl#" ' \
-                  '-O "seq.rdf" ' \
-                  '-w "distmx" ' \
-                  '-D "charsttbl" ' \
-                  '-z "taxatbl#" ' \
-                  '-a "chartbl#" ' \
-                  '-k "charchngtbl#" ' \
-                  '-A "CONVERT" ' \
-                  '-N 3.465 ' \
-                  '-Q "wtdistmx" ' \
-                  '-K "rftdistmx" ' \
-                  '-R "tcmptbl" ' \
-                  '-B "parttbl" ' \
-                  '-L "topotbl" ' \
-                  '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
+    murka_args += murka_additional_args
+    murka_args += '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
                   '-G "GraphViz; 1; ROOTPREFERRED|CHNAMES|CHCHNG|TXNAMES|TXFR|TXFRSZ|TXCD|ROOTONLY|TREEONLY|NOPOOL|AGE|MPPART; 1.8; 1.1; 0.1; 2.0; 86.0; ; ; ; viz/{1}/output/nw#.dot; ; viz/tpl/nwtpl.txt; ; " ' \
                   '-i "{2}/request.rdf" ' \
         .format(os.getcwd(), request_id, seq_path)
