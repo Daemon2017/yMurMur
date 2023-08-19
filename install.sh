@@ -8,6 +8,7 @@ apt-get install graphviz -y
 apt-get install python3.8-distutils -y
 apt-get install python3.8 -y
 apt-get install python3-pip -y
+apt-get install wget -y
 python3.8 -m pip install -r requirements.txt
 wget -O murka-1.4.1-src.tar.gz https://master.dl.sourceforge.net/project/phylomurka/murka/murka-1.4.1/murka-1.4.1-src.tar.gz?viasf=1
 rm -rf murka
