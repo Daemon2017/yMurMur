@@ -1,7 +1,6 @@
 import os
 import shutil
 import subprocess
-import uuid
 
 import pydot
 
@@ -220,14 +219,6 @@ def create_zip(request_id, viz_path):
     if os.path.exists(output_path):
         shutil.rmtree(output_path)
     print(f'ZIP-file for RQ {request_id} created.')
-
-
-def is_valid_uuid(val):
-    try:
-        uuid.UUID(str(val))
-        return True
-    except ValueError:
-        return False
 
 
 def process_txt(request_id, prepared_rows):
