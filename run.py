@@ -24,7 +24,7 @@ def request_txt():
         if haplotypes_count > 1:
             if is_same_size(rows, modal_markers_count):
                 prepared_rows = get_prepared_rows(rows, modal_markers_count)
-                process_txt(request_id, prepared_rows)
+                process_txt(request_id, prepared_rows, modal_markers_count)
                 file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
                 if not os.path.exists(file_path):
                     error = "File not ready!"

@@ -9,7 +9,7 @@ markers_names = '393,390,D19,391,385a,385b,426,388,439,3891,392,3892,458,459a,45
                 '406,511,425,413a,413b,557,594,436,490,534,450,444,481,520,446,617,568,487,572,640,492,565,710,485,' \
                 '632,495,540,714,716,717,505,556,549,589,522,494,533,636,575,638,462,452,445,YGATAA10,463,441,' \
                 'YGGAAT1B07,525,712,593,650,532,715,504,513,561,552,726,635,587,643,497,510,434,461,435'
-mutation_rate = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7,13,9,4,6,2,2,2,2,5,19,23,58,27,19,' \
+mutation_rates = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7,13,9,4,6,2,2,2,2,5,19,23,58,27,19,' \
                 '83,10,29,99,7,9,11,5,6,4,21,71,45,3,50,4,3,6,4,13,17,10,11,30,28,18,20,20,20,20,20,20,20,20,20,20,' \
                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 murka_additional_args = '-T "MJ" ' \
@@ -50,7 +50,6 @@ murka_additional_args = '-T "MJ" ' \
                         '-a "chartbl#" ' \
                         '-k "charchngtbl#" ' \
                         '-A "CONVERT" ' \
-                        '-N 3.465 ' \
                         '-Q "wtdistmx" ' \
                         '-K "rftdistmx" ' \
                         '-R "tcmptbl" ' \
@@ -89,9 +88,15 @@ def is_same_size(prepared_rows, modal_markers_count):
 
 def get_prepared_rows(rows, modal_markers_count):
     rows[0] = ','.join(markers_names.split(',')[:modal_markers_count])
-    rows[1] = ','.join(mutation_rate.split(',')[:modal_markers_count])
+    rows[1] = ','.join(mutation_rates.split(',')[:modal_markers_count])
     del rows[3:6]
     return rows
+
+
+def get_rho(markers_count):
+    years_per_generation = 33
+    avg_mutation_rate = 0.0024
+    return years_per_generation / avg_mutation_rate / markers_count / years_per_generation
 
 
 def create_folders(request_id, seq_path, viz_path):
@@ -138,7 +143,7 @@ def create_rdf(request_id, seq_path):
     print(f'RDF-file for RQ {request_id} created.')
 
 
-def create_txt(request_id, seq_path):
+def create_txt(request_id, seq_path, markers_count):
     murka_args = ''
     if os.name == 'nt':
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
@@ -148,7 +153,8 @@ def create_txt(request_id, seq_path):
     murka_args += '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
                   '-G "TRDF; 4; ROOTPREFERRED|DIST|CHNAMES|CHCHNG|TXFR|ROOTONLY|TREEONLY|NOPOOL|NOSEQ|MPPART; 4; 3; 0.0; 0.0; ; ; ; ; viz/{1}/output/nw#.txt; ; ; ; " ' \
                   '-i "{2}/request.rdf" ' \
-        .format(os.getcwd(), request_id, seq_path)
+                  '-N {3} ' \
+        .format(os.getcwd(), request_id, seq_path, get_rho(markers_count))
     subprocess.run(murka_args,
                    shell=True,
                    check=False,
@@ -161,7 +167,7 @@ def create_txt(request_id, seq_path):
     print(f'TXT-file for RQ {request_id} created.')
 
 
-def create_dot(request_id, seq_path):
+def create_dot(request_id, seq_path, markers_count):
     murka_args = ''
     if os.name == 'nt':
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
@@ -171,7 +177,8 @@ def create_dot(request_id, seq_path):
     murka_args += '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
                   '-G "GraphViz; 1; ROOTPREFERRED|CHNAMES|CHCHNG|TXNAMES|TXFR|TXFRSZ|TXCD|ROOTONLY|TREEONLY|NOPOOL|AGE|MPPART; 1.8; 1.1; 0.1; 2.0; 86.0; ; ; ; viz/{1}/output/nw#.dot; ; viz/tpl/nwtpl.txt; ; " ' \
                   '-i "{2}/request.rdf" ' \
-        .format(os.getcwd(), request_id, seq_path)
+                  '-N {3} ' \
+        .format(os.getcwd(), request_id, seq_path, get_rho(markers_count))
     subprocess.run(murka_args,
                    shell=True,
                    check=False,
@@ -221,13 +228,13 @@ def create_zip(request_id, viz_path):
     print(f'ZIP-file for RQ {request_id} created.')
 
 
-def process_txt(request_id, prepared_rows):
+def process_txt(request_id, prepared_rows, modal_markers_count):
     seq_path = f"{os.getcwd()}/murka/data/seq/{request_id}"
     viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
     create_folders(request_id, seq_path, viz_path)
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
-    create_txt(request_id, seq_path)
+    create_txt(request_id, seq_path, modal_markers_count)
     create_zip(request_id, viz_path)
 
 
@@ -237,7 +244,7 @@ def process_png(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_folders(request_id, seq_path, viz_path)
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
-    create_dot(request_id, seq_path)
+    create_dot(request_id, seq_path, modal_markers_count)
     create_png(request_id, viz_path, headers['rankdir'], modal_markers_count, haplotypes_count)
     create_zip(request_id, viz_path)
 
@@ -248,6 +255,6 @@ def process_pdf(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_folders(request_id, seq_path, viz_path)
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
-    create_dot(request_id, seq_path)
+    create_dot(request_id, seq_path, modal_markers_count)
     create_pdf(request_id, viz_path, headers['rankdir'], modal_markers_count, haplotypes_count)
     create_zip(request_id, viz_path)
