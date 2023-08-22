@@ -27,20 +27,22 @@ def request_txt():
                 process_txt(request_id, prepared_rows)
                 file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
                 if not os.path.exists(file_path):
-                    return Response(json.dumps(dict(status="File not ready!")),
-                                    mimetype='application/json')
+                    error = "File not ready!"
+                    print(error)
+                    return Response(json.dumps(dict(error=error)), mimetype='application/json')
                 return send_file(file_path, mimetype='application/zip')
             else:
-                return Response(json.dumps(dict(error="All haplotypes must be the same length "
-                                                      "as the modal haplotype!")),
-                                mimetype='application/json')
+                error = "All haplotypes must be the same length as the modal haplotype!"
+                print(error)
+                return Response(json.dumps(dict(error=error)), mimetype='application/json')
         else:
-            return Response(json.dumps(dict(error="In the set, in addition to the modal, "
-                                                  "there must be more than 1 haplotype!")),
-                            mimetype='application/json')
+            error = "In the set, in addition to the modal, there must be more than 1 haplotype!"
+            print(error)
+            return Response(json.dumps(dict(error=error)), mimetype='application/json')
     else:
-        return Response(json.dumps(dict(error="A modal haplotype cannot have more than 111 markers!")),
-                        mimetype='application/json')
+        error = "A modal haplotype cannot have more than 111 markers!"
+        print(error)
+        return Response(json.dumps(dict(error=error)), mimetype='application/json')
 
 
 @app.route('/request_png', methods=['POST'])
@@ -57,20 +59,22 @@ def request_png():
                 process_png(request_id, prepared_rows, request.headers, modal_markers_count, haplotypes_count)
                 file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
                 if not os.path.exists(file_path):
-                    return Response(json.dumps(dict(status="File not ready!")),
-                                    mimetype='application/json')
+                    error = "File not ready!"
+                    print(error)
+                    return Response(json.dumps(dict(error=error)), mimetype='application/json')
                 return send_file(file_path, mimetype='application/zip')
             else:
-                return Response(json.dumps(dict(error="All haplotypes must be the same length "
-                                                      "as the modal haplotype!")),
-                                mimetype='application/json')
+                error = "All haplotypes must be the same length as the modal haplotype!"
+                print(error)
+                return Response(json.dumps(dict(error=error)), mimetype='application/json')
         else:
-            return Response(json.dumps(dict(error="In the set, in addition to the modal, "
-                                                  "there must be more than 1 haplotype!")),
-                            mimetype='application/json')
+            error = "In the set, in addition to the modal, there must be more than 1 haplotype!"
+            print(error)
+            return Response(json.dumps(dict(error=error)), mimetype='application/json')
     else:
-        return Response(json.dumps(dict(error="A modal haplotype cannot have more than 111 markers!")),
-                        mimetype='application/json')
+        error = "A modal haplotype cannot have more than 111 markers!"
+        print(error)
+        return Response(json.dumps(dict(error=error)), mimetype='application/json')
 
 
 @app.route('/request_pdf', methods=['POST'])
@@ -87,20 +91,22 @@ def request_pdf():
                 process_pdf(request_id, prepared_rows, request.headers, modal_markers_count, haplotypes_count)
                 file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
                 if not os.path.exists(file_path):
-                    return Response(json.dumps(dict(status="File not ready!")),
-                                    mimetype='application/json')
+                    error = "File not ready!"
+                    print(error)
+                    return Response(json.dumps(dict(error=error)), mimetype='application/json')
                 return send_file(file_path, mimetype='application/zip')
             else:
-                return Response(json.dumps(dict(error="All haplotypes must be the same length "
-                                                      "as the modal haplotype!")),
-                                mimetype='application/json')
+                error = "All haplotypes must be the same length as the modal haplotype!"
+                print(error)
+                return Response(json.dumps(dict(error=error)), mimetype='application/json')
         else:
-            return Response(json.dumps(dict(error="In the set, in addition to the modal, "
-                                                  "there must be more than 1 haplotype!")),
-                            mimetype='application/json')
+            error = "In the set, in addition to the modal, there must be more than 1 haplotype!"
+            print(error)
+            return Response(json.dumps(dict(error=error)), mimetype='application/json')
     else:
-        return Response(json.dumps(dict(error="A modal haplotype cannot have more than 111 markers!")),
-                        mimetype='application/json')
+        error = "A modal haplotype cannot have more than 111 markers!"
+        print(error)
+        return Response(json.dumps(dict(error=error)), mimetype='application/json')
 
 
 if __name__ == '__main__':
