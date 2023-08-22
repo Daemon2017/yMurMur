@@ -1,11 +1,18 @@
 function sendRequest() {
+    document.getElementById("errorTextareaID").value = "";
     var xhr = new XMLHttpRequest();
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
-            var blob = new Blob([xhr.response], { type: "octet/stream" });
-            var fileName = "result.zip";
-            saveAs(blob, fileName);
+            if (xhr.response.byteLength > 256) {
+                var blob = new Blob([xhr.response], { type: "octet/stream" });
+                var fileName = "result.zip";
+                saveAs(blob, fileName);
+                document.getElementById("errorTextareaID").value = "Success!";
+            } else {
+                var error = String.fromCharCode.apply(null, new Uint8Array(this.response));
+                document.getElementById("errorTextareaID").value = JSON.parse(error)['error'];
+            }
         }
     }
     xhr.responseType = "arraybuffer";
