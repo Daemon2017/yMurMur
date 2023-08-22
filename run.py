@@ -3,12 +3,14 @@ import os
 import uuid
 
 from flask import Flask, Response, request, send_file
+from flask_cors import CORS
 from waitress import serve
 
 from utils import process_txt, process_png, process_pdf, get_rows, get_modal_markers_count, \
     get_haplotypes_count, get_prepared_rows, is_same_size
 
 app = Flask(__name__)
+cors = CORS(app)
 
 
 @app.route('/request_txt', methods=['POST'])
