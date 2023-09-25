@@ -1,10 +1,10 @@
 .github/
 .ipynb_checkpoints/
 .idea/
-murka/
+back/murka/
 requests/
-python/
-graphviz/
+back/python/
+back/graphviz/
 *.csv
 *.log
 *.rs

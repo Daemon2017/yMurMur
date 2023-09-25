@@ -101,7 +101,7 @@ def request_pdf():
 
 
 if __name__ == '__main__':
-    print('yMurMur!')
+    print('yMurMur ready!')
     serve(app,
           host="0.0.0.0",
-          port=os.environ['PORT'])
+          port=8080)
