@@ -10,8 +10,8 @@ markers_names = '393,390,D19,391,385a,385b,426,388,439,3891,392,3892,458,459a,45
                 '632,495,540,714,716,717,505,556,549,589,522,494,533,636,575,638,462,452,445,YGATAA10,463,441,' \
                 'YGGAAT1B07,525,712,593,650,532,715,504,513,561,552,726,635,587,643,497,510,434,461,435'
 mutation_rates = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,7,13,9,4,6,2,2,2,2,5,19,23,58,27,19,' \
-                '83,10,29,99,7,9,11,5,6,4,21,71,45,3,50,4,3,6,4,13,17,10,11,30,28,18,20,20,20,20,20,20,20,20,20,20,' \
-                '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
+                 '83,10,29,99,7,9,11,5,6,4,21,71,45,3,50,4,3,6,4,13,17,10,11,30,28,18,20,20,20,20,20,20,20,20,20,20,' \
+                 '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 murka_additional_args = '-T "MJ" ' \
                         '-S "VB|RSW|EM|THR2" ' \
                         '-V "VP|VL|VR" ' \
@@ -58,11 +58,27 @@ murka_additional_args = '-T "MJ" ' \
 
 
 def get_rows(data):
-    return data \
+    rows = data \
         .decode('utf-8') \
         .replace(", ", ",") \
-        .replace("-", ",") \
         .splitlines()
+
+    markers_columns = rows[0].split(',')
+    for i, row in enumerate(rows):
+        if i > 0:
+            columns = row.split(',')
+            if len(columns) > 1:
+                values = []
+                for j, column in enumerate(columns):
+                    column_values = column.split('-')
+                    if markers_columns[j] in ['D385', 'D459', 'YCAII', 'CDY', 'D395S', 'D413']:
+                        values.extend([column_values[0], column_values[-1]])
+                    elif markers_columns[j] in ['D464']:
+                        values.extend([column_values[0], column_values[1], column_values[-2], column_values[-1]])
+                    else:
+                        values.extend([column_values[-1]])
+                rows[i] = ','.join(values)
+    return rows
 
 
 def get_modal_markers_count(prepared_rows):
