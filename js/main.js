@@ -19,6 +19,8 @@ function sendRequest() {
 
     xhr.open("POST", "https://bbak5ugcncih5o367egr.containers.yandexcloud.net/" + document.getElementById("formatID").value);
     xhr.setRequestHeader("rankdir", document.getElementById("directionID").value);
+    xhr.setRequestHeader("ypg", document.getElementById("ypgID").value);
+    xhr.setRequestHeader("amr", document.getElementById("amrID").value);
     xhr.setRequestHeader("Content-Type", "text/plain");
 
     xhr.send(document.getElementById("textareaID").value);
