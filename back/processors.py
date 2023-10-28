@@ -1,6 +1,6 @@
 import os
 
-from back.utils import create_folder, create_ych, create_rdf, create_txt, create_dot, create_png, create_pdf, create_zip
+from utils import create_folder, create_ych, create_rdf, create_txt, create_dot, create_png, create_pdf, create_zip
 
 
 def process_txt(request_id, prepared_rows, headers, modal_markers_count):
