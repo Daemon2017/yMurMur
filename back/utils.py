@@ -13,7 +13,7 @@ mutation_rates = '10,6,7,9,6,4,99,14,5,7,21,4,3,19,13,51,30,4,18,10,2,6,5,5,5,6,
                  '83,10,29,99,7,9,11,5,6,4,21,71,45,3,50,4,3,6,4,13,17,10,11,30,28,18,20,20,20,20,20,20,20,20,20,20,' \
                  '20,15,15,15,15,15,15,15,15,15,15,15,10,10,10,10,10,10,10,10,10,10,10,5,5,5,5,5,5,5,5,5,5,5'
 murka_additional_args = '-T "MJ" ' \
-                        '-S "VB|RSW|EM|THR2" ' \
+                        '-S "VB|RSW|RSR|EM|THR2" ' \
                         '-V "VP|VL|VR" ' \
                         '-I 1 ' \
                         '-F 20.0 ' \
@@ -238,49 +238,3 @@ def create_zip(request_id, viz_path):
     if os.path.exists(output_path):
         shutil.rmtree(output_path)
     print(f'ZIP-file for RQ {request_id} created.')
-
-
-def process_txt(request_id, prepared_rows, headers, modal_markers_count):
-    seq_path = f'{os.getcwd()}/murka/data/seq/{request_id}'
-    viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
-    create_folder(request_id, seq_path)
-    create_folder(request_id, f'{viz_path}/output')
-    create_ych(prepared_rows, request_id, seq_path)
-    create_rdf(request_id, seq_path)
-    create_txt(request_id, seq_path, modal_markers_count, headers['ypg'], headers['amr'])
-    create_zip(request_id, viz_path)
-
-
-def process_dot(request_id, prepared_rows, headers, modal_markers_count):
-    seq_path = f'{os.getcwd()}/murka/data/seq/{request_id}'
-    viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
-    create_folder(request_id, seq_path)
-    create_folder(request_id, f'{viz_path}/output')
-    create_ych(prepared_rows, request_id, seq_path)
-    create_rdf(request_id, seq_path)
-    create_dot(request_id, seq_path, modal_markers_count, headers['ypg'], headers['amr'])
-    create_zip(request_id, viz_path)
-
-
-def process_png(request_id, prepared_rows, headers, modal_markers_count, haplotypes_count):
-    seq_path = f'{os.getcwd()}/murka/data/seq/{request_id}'
-    viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
-    create_folder(request_id, seq_path)
-    create_folder(request_id, f'{viz_path}/output')
-    create_ych(prepared_rows, request_id, seq_path)
-    create_rdf(request_id, seq_path)
-    create_dot(request_id, seq_path, modal_markers_count, headers['ypg'], headers['amr'])
-    create_png(request_id, viz_path, headers['rankdir'], modal_markers_count, haplotypes_count)
-    create_zip(request_id, viz_path)
-
-
-def process_pdf(request_id, prepared_rows, headers, modal_markers_count, haplotypes_count):
-    seq_path = f'{os.getcwd()}/murka/data/seq/{request_id}'
-    viz_path = f'{os.getcwd()}/murka/nw/viz/{request_id}'
-    create_folder(request_id, seq_path)
-    create_folder(request_id, f'{viz_path}/output')
-    create_ych(prepared_rows, request_id, seq_path)
-    create_rdf(request_id, seq_path)
-    create_dot(request_id, seq_path, modal_markers_count, headers['ypg'], headers['amr'])
-    create_pdf(request_id, viz_path, headers['rankdir'], modal_markers_count, haplotypes_count)
-    create_zip(request_id, viz_path)

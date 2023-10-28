@@ -6,8 +6,8 @@ from flask import Flask, Response, request, send_file
 from flask_cors import CORS
 from waitress import serve
 
-from utils import process_txt, process_png, process_pdf, get_rows, get_modal_markers_count, \
-    get_haplotypes_count, get_prepared_rows, is_same_size, process_dot
+from back.processors import process_txt, process_png, process_pdf, process_dot
+from back.utils import get_rows, get_modal_markers_count, get_haplotypes_count, is_same_size, get_prepared_rows
 
 app = Flask(__name__)
 cors = CORS(app)

@@ -17,6 +17,7 @@ tar -zxvf murka-1.4.1-src.tar.gz
 rm murka-1.4.1-src.tar.gz
 mv murka-1.4.1-src murka
 cd murka || exit
+echo "42" > murka.rs
 ./configure
 make
 cd murka || exit
