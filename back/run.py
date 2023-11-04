@@ -19,17 +19,17 @@ def request_txt():
     print(f'Received RQ request_txt: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if len(haplotype_names) <= 1:
-        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
-        print(error)
-        return Response(json.dumps(dict(error=error)), mimetype='application/json')
     if not is_same_size(rows, modal_markers_count):
         error = 'All haplotypes must be the same length as the modal haplotype!'
+        print(error)
+        return Response(json.dumps(dict(error=error)), mimetype='application/json')
+    haplotype_names = get_haplotype_names(rows)
+    if len(haplotype_names) <= 1:
+        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     prepared_rows = get_prepared_rows(rows, modal_markers_count)
@@ -48,17 +48,17 @@ def request_dot():
     print(f'Received RQ request_dot: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if len(haplotype_names) <= 1:
-        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
-        print(error)
-        return Response(json.dumps(dict(error=error)), mimetype='application/json')
     if not is_same_size(rows, modal_markers_count):
         error = 'All haplotypes must be the same length as the modal haplotype!'
+        print(error)
+        return Response(json.dumps(dict(error=error)), mimetype='application/json')
+    haplotype_names = get_haplotype_names(rows)
+    if len(haplotype_names) <= 1:
+        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     prepared_rows = get_prepared_rows(rows, modal_markers_count)
@@ -77,17 +77,17 @@ def request_png():
     print(f'Received RQ request_png: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if len(haplotype_names) <= 1:
-        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
-        print(error)
-        return Response(json.dumps(dict(error=error)), mimetype='application/json')
     if not is_same_size(rows, modal_markers_count):
         error = 'All haplotypes must be the same length as the modal haplotype!'
+        print(error)
+        return Response(json.dumps(dict(error=error)), mimetype='application/json')
+    haplotype_names = get_haplotype_names(rows)
+    if len(haplotype_names) <= 1:
+        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     prepared_rows = get_prepared_rows(rows, modal_markers_count)
@@ -106,17 +106,17 @@ def request_pdf():
     print(f'Received RQ request_pdf: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if len(haplotype_names) <= 1:
-        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
-        print(error)
-        return Response(json.dumps(dict(error=error)), mimetype='application/json')
     if not is_same_size(rows, modal_markers_count):
         error = 'All haplotypes must be the same length as the modal haplotype!'
+        print(error)
+        return Response(json.dumps(dict(error=error)), mimetype='application/json')
+    haplotype_names = get_haplotype_names(rows)
+    if len(haplotype_names) <= 1:
+        error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     prepared_rows = get_prepared_rows(rows, modal_markers_count)
