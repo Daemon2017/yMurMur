@@ -7,7 +7,7 @@ from flask_cors import CORS
 from waitress import serve
 
 from processors import process_txt, process_png, process_pdf, process_dot
-from utils import get_rows, get_modal_markers_count, get_haplotypes_count, is_same_size, get_prepared_rows
+from utils import get_rows, get_modal_markers_count, get_haplotype_names, is_same_size, get_prepared_rows
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -19,12 +19,12 @@ def request_txt():
     print(f'Received RQ request_txt: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotypes_count = get_haplotypes_count(rows)
+    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if haplotypes_count <= 1:
+    if len(haplotype_names) <= 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
@@ -48,12 +48,12 @@ def request_dot():
     print(f'Received RQ request_dot: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotypes_count = get_haplotypes_count(rows)
+    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if haplotypes_count <= 1:
+    if len(haplotype_names) <= 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
@@ -77,12 +77,12 @@ def request_png():
     print(f'Received RQ request_png: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotypes_count = get_haplotypes_count(rows)
+    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if haplotypes_count <= 1:
+    if len(haplotype_names) <= 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
@@ -91,7 +91,7 @@ def request_png():
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     prepared_rows = get_prepared_rows(rows, modal_markers_count)
-    process_png(request_id, prepared_rows, request.headers, modal_markers_count, haplotypes_count)
+    process_png(request_id, prepared_rows, request.headers, modal_markers_count, haplotype_names)
     file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
     if not os.path.exists(file_path):
         error = 'File not ready!'
@@ -106,12 +106,12 @@ def request_pdf():
     print(f'Received RQ request_pdf: {request_id}')
     rows = get_rows(request.data)
     modal_markers_count = get_modal_markers_count(rows)
-    haplotypes_count = get_haplotypes_count(rows)
+    haplotype_names = get_haplotype_names(rows)
     if modal_markers_count > 111:
         error = 'A modal haplotype cannot have more than 111 markers!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
-    if haplotypes_count <= 1:
+    if len(haplotype_names) <= 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
@@ -120,7 +120,7 @@ def request_pdf():
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     prepared_rows = get_prepared_rows(rows, modal_markers_count)
-    process_pdf(request_id, prepared_rows, request.headers, modal_markers_count, haplotypes_count)
+    process_pdf(request_id, prepared_rows, request.headers, modal_markers_count, haplotype_names)
     file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
     if not os.path.exists(file_path):
         error = 'File not ready!'

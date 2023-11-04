@@ -85,12 +85,11 @@ def get_modal_markers_count(prepared_rows):
     return len(prepared_rows[4].split(','))
 
 
-def get_haplotypes_count(prepared_rows):
-    haplotypes_count = 0
-    for row in prepared_rows[6:]:
-        if len(row.split(',')) > 1:
-            haplotypes_count += 1
-    return haplotypes_count
+def get_haplotype_names(prepared_rows):
+    haplotype_names = []
+    for i in range(6, len(prepared_rows), 3):
+        haplotype_names.append(prepared_rows[i])
+    return haplotype_names
 
 
 def is_same_size(prepared_rows, modal_markers_count):
