@@ -28,7 +28,7 @@ def request_txt():
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     haplotype_names = get_haplotype_names(rows)
-    if len(haplotype_names) <= 1:
+    if not len(haplotype_names) > 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
@@ -57,7 +57,7 @@ def request_dot():
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     haplotype_names = get_haplotype_names(rows)
-    if len(haplotype_names) <= 1:
+    if not len(haplotype_names) > 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
@@ -86,7 +86,7 @@ def request_png():
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     haplotype_names = get_haplotype_names(rows)
-    if len(haplotype_names) <= 1:
+    if not len(haplotype_names) > 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
@@ -115,7 +115,7 @@ def request_pdf():
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     haplotype_names = get_haplotype_names(rows)
-    if len(haplotype_names) <= 1:
+    if not len(haplotype_names) > 1:
         error = 'In the set, in addition to the modal, there must be more than 1 haplotype!'
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')

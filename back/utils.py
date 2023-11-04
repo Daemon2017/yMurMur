@@ -93,11 +93,10 @@ def get_haplotype_names(prepared_rows):
 
 
 def is_same_size(prepared_rows, modal_markers_count):
-    for row in prepared_rows[6:]:
-        splitted_row = row.split(',')
-        if len(splitted_row) > 1:
-            if len(splitted_row) != modal_markers_count:
-                return False
+    for i in range(7, len(prepared_rows), 3):
+        splitted_row = prepared_rows[i].split(',')
+        if len(splitted_row) != modal_markers_count:
+            return False
     return True
 
 
