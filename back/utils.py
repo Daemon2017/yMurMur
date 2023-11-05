@@ -207,12 +207,13 @@ def modify_dot(request_id, viz_path):
         dot_filename_path = f'{output_path}/{dot_filename}'
         graphs = pydot.graph_from_dot_file(dot_filename_path)
         graph = graphs[0]
+        graph.del_node('"\\n"')
         for node in graph.get_nodes():
             attributes = node.get_attributes()
             if ('shape' in attributes) and (attributes['shape'] == 'plaintext'):
                 new_label = attributes['label'].replace('"', '').split('\\n+-')[0]
                 node.set('label', new_label + ' y.a.')
-        graph.write_raw(dot_filename_path)
+        graph.write(path=dot_filename_path, format='raw')
     print(f'DOT-file for RQ {request_id} modified.')
 
 
@@ -221,11 +222,12 @@ def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     for dot_filename in os.listdir(output_path):
         png_filename = dot_filename.replace('.dot', '.png')
         dot_filename_path = f'{output_path}/{dot_filename}'
-        graph = pydot.graph_from_dot_file(dot_filename_path)
-        graph[0].set_graph_defaults(rankdir=rankdir)
-        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
+        graphs = pydot.graph_from_dot_file(dot_filename_path)
+        graph = graphs[0]
+        graph.del_node('"\\n"')
+        graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
         png_filename_path = f'{output_path}/{png_filename}'
-        graph[0].write_png(png_filename_path)
+        graph.write(path=png_filename_path, format='png')
         os.remove(dot_filename_path)
     print(f'PNG-file for RQ {request_id} created.')
 
@@ -235,10 +237,12 @@ def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     for dot_filename in os.listdir(output_path):
         pdf_filename = dot_filename.replace('.dot', '.pdf')
         dot_filename_path = f'{output_path}/{dot_filename}'
-        graph = pydot.graph_from_dot_file(dot_filename_path)
-        graph[0].set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
+        graphs = pydot.graph_from_dot_file(dot_filename_path)
+        graph = graphs[0]
+        graph.del_node('"\\n"')
+        graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
         pdf_filename_path = f'{output_path}/{pdf_filename}'
-        graph[0].write_pdf(pdf_filename_path)
+        graph.write(path=pdf_filename_path, format='pdf')
         os.remove(dot_filename_path)
     print(f'PDF-file for RQ {request_id} created.')
 
