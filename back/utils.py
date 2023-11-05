@@ -220,14 +220,14 @@ def modify_dot(request_id, viz_path):
 def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
-        png_filename = dot_filename.replace('.dot', '.png')
+        output_filename = dot_filename.replace('.dot', '.png')
         dot_filename_path = f'{output_path}/{dot_filename}'
         graphs = pydot.graph_from_dot_file(dot_filename_path)
         graph = graphs[0]
         graph.del_node('"\\n"')
         graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
-        png_filename_path = f'{output_path}/{png_filename}'
-        graph.write(path=png_filename_path, format='png')
+        filename_path = f'{output_path}/{output_filename}'
+        graph.write(path=filename_path, format='png')
         os.remove(dot_filename_path)
     print(f'PNG-file for RQ {request_id} created.')
 
@@ -235,14 +235,14 @@ def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
 def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
-        pdf_filename = dot_filename.replace('.dot', '.pdf')
+        output_filename = dot_filename.replace('.dot', '.pdf')
         dot_filename_path = f'{output_path}/{dot_filename}'
         graphs = pydot.graph_from_dot_file(dot_filename_path)
         graph = graphs[0]
         graph.del_node('"\\n"')
         graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
-        pdf_filename_path = f'{output_path}/{pdf_filename}'
-        graph.write(path=pdf_filename_path, format='pdf')
+        filename_path = f'{output_path}/{output_filename}'
+        graph.write(path=filename_path, format='pdf')
         os.remove(dot_filename_path)
     print(f'PDF-file for RQ {request_id} created.')
 
