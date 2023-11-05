@@ -201,6 +201,21 @@ def create_dot(request_id, seq_path, markers_count, years_per_generation, avg_mu
     print(f'DOT-file for RQ {request_id} created.')
 
 
+def modify_dot(request_id, viz_path):
+    output_path = f'{viz_path}/output'
+    for dot_filename in os.listdir(output_path):
+        dot_filename_path = f'{output_path}/{dot_filename}'
+        graphs = pydot.graph_from_dot_file(dot_filename_path)
+        graph = graphs[0]
+        for node in graph.get_nodes():
+            attributes = node.get_attributes()
+            if ('shape' in attributes) and (attributes['shape'] == 'plaintext'):
+                new_label = attributes['label'].replace('"', '').split('\\n+-')[0]
+                node.set('label', new_label + ' y.a.')
+        graph.write_raw(dot_filename_path)
+    print(f'DOT-file for RQ {request_id} modified.')
+
+
 def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):

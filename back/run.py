@@ -62,7 +62,7 @@ def request_dot():
         print(error)
         return Response(json.dumps(dict(error=error)), mimetype='application/json')
     prepared_rows = get_prepared_rows(rows, modal_markers_count)
-    process_dot(request_id, prepared_rows, request.headers, modal_markers_count)
+    process_dot(request_id, prepared_rows, request.headers, modal_markers_count, haplotype_names)
     file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
     if not os.path.exists(file_path):
         error = 'File not ready!'
