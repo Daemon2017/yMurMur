@@ -23,7 +23,7 @@ def process_dot(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path, modal_markers_count, headers['ypg'], headers['amr'])
-    modify_dot(request_id, viz_path)
+    modify_dot(request_id, viz_path, haplotype_names)
     create_zip(request_id, viz_path)
 
 
@@ -35,7 +35,7 @@ def process_png(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path, modal_markers_count, headers['ypg'], headers['amr'])
-    modify_dot(request_id, viz_path)
+    modify_dot(request_id, viz_path, haplotype_names)
     create_png(request_id, viz_path, headers['rankdir'], modal_markers_count, len(haplotype_names))
     create_zip(request_id, viz_path)
 
@@ -48,6 +48,6 @@ def process_pdf(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_ych(prepared_rows, request_id, seq_path)
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path, modal_markers_count, headers['ypg'], headers['amr'])
-    modify_dot(request_id, viz_path)
+    modify_dot(request_id, viz_path, haplotype_names)
     create_pdf(request_id, viz_path, headers['rankdir'], modal_markers_count, len(haplotype_names))
     create_zip(request_id, viz_path)

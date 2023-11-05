@@ -1,5 +1,7 @@
 import os
+import random
 import shutil
+import string
 import subprocess
 
 import pydot
@@ -201,7 +203,7 @@ def create_dot(request_id, seq_path, markers_count, years_per_generation, avg_mu
     print(f'DOT-file for RQ {request_id} created.')
 
 
-def modify_dot(request_id, viz_path):
+def modify_dot(request_id, viz_path, haplotype_names):
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
         dot_filename_path = f'{output_path}/{dot_filename}'
@@ -212,9 +214,37 @@ def modify_dot(request_id, viz_path):
             attributes = node.get_attributes()
             if ('shape' in attributes) and (attributes['shape'] == 'plaintext'):
                 new_label = attributes['label'].replace('"', '').split('\\n+-')[0]
-                node.set('label', new_label + ' y.a.')
+                node.set('label', f'{new_label} y.a.')
+        for edge in graph.get_edges():
+            source = edge.get_source().replace('"', '')
+            if source in haplotype_names:
+                new_node = ''.join(random.choices(string.ascii_letters, k=12))
+                graph.add_node(pydot.Node(name=f'"{new_node}"', label='', style='bold'))
+                replace_edge_source(graph, source, new_node)
+                replace_edge_destination(graph, source, new_node)
+                graph.add_edge(pydot.Edge(src=f'"{new_node}"', dst=f'"{source}"', arrowhead='none'))
         graph.write(path=dot_filename_path, format='raw')
     print(f'DOT-file for RQ {request_id} modified.')
+
+
+def replace_edge_source(graph, old_source, new_source):
+    for edge in graph.get_edges():
+        attributes = edge.get_attributes()
+        source = edge.get_source().replace('"', '')
+        destination = edge.get_destination().replace('"', '')
+        if source == old_source:
+            graph.del_edge(src_or_list=f'"{old_source}"', dst=f'"{destination}"')
+            graph.add_edge(pydot.Edge(src=f'"{new_source}"', dst=f'"{destination}"', **attributes))
+
+
+def replace_edge_destination(graph, old_destination, new_destination):
+    for edge in graph.get_edges():
+        attributes = edge.get_attributes()
+        source = edge.get_source().replace('"', '')
+        destination = edge.get_destination().replace('"', '')
+        if destination == old_destination:
+            graph.del_edge(src_or_list=f'"{source}"', dst=f'"{old_destination}"')
+            graph.add_edge(pydot.Edge(src=f'"{source}"', dst=f'"{new_destination}"', **attributes))
 
 
 def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
