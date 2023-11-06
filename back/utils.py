@@ -210,11 +210,11 @@ def modify_dot(request_id, viz_path, haplotype_names):
         graphs = pydot.graph_from_dot_file(dot_filename_path)
         graph = graphs[0]
         graph.del_node('"\\n"')
+        subgraph = pydot.Subgraph(rank='same')
         for node in graph.get_nodes():
-            attributes = node.get_attributes()
-            if ('shape' in attributes) and (attributes['shape'] == 'plaintext'):
-                new_label = attributes['label'].replace('"', '').split('\\n+-')[0]
-                node.set('label', f'{new_label} y.a.')
+            if node.get_name().replace('"', '') in haplotype_names:
+                subgraph.add_node(node)
+        graph.add_subgraph(subgraph)
         for edge in graph.get_edges():
             source = edge.get_source().replace('"', '')
             if source in haplotype_names:
