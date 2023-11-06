@@ -1,5 +1,6 @@
 import os
 import random
+import re
 import shutil
 import string
 import subprocess
@@ -201,6 +202,14 @@ def create_dot(request_id, seq_path, markers_count, years_per_generation, avg_mu
     if os.path.exists(seq_path):
         os.rmdir(seq_path)
     print(f'DOT-file for RQ {request_id} created.')
+
+
+def remove_extra_dot(viz_path):
+    output_path = f'{viz_path}/output'
+    pattern = re.compile('nw_mp_\\d*.dot')
+    for dot_filename in os.listdir(output_path):
+        if not pattern.match(dot_filename):
+            os.remove(f'{output_path}/{dot_filename}')
 
 
 def modify_dot(request_id, viz_path, haplotype_names):
