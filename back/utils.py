@@ -221,7 +221,7 @@ def modify_dot(request_id, viz_path, haplotype_names, average_age):
         graph.del_node('"\\n"')
         for node in graph.get_nodes():
             attributes = node.get_attributes()
-            if ('shape' in attributes) and (attributes['shape'] == 'plaintext'):
+            if is_plaintext(attributes):
                 label = attributes['label']
                 regex = re.compile('\"(\d*.\d*)\\\\n\+-(\d*.\d*)y\"')
                 result = regex.match(label)
@@ -243,6 +243,10 @@ def modify_dot(request_id, viz_path, haplotype_names, average_age):
         graph.add_subgraph(subgraph)
         graph.write(path=dot_filename_path, format='raw')
     print(f'DOT-file for RQ {request_id} modified.')
+
+
+def is_plaintext(attributes):
+    return ('shape' in attributes) and (attributes['shape'] == 'plaintext')
 
 
 def replace_edge_source(graph, old_source, new_source):
