@@ -212,18 +212,22 @@ def remove_extra_dot(viz_path):
             os.remove(f'{output_path}/{dot_filename}')
 
 
-def modify_dot(request_id, viz_path, haplotype_names):
+def modify_dot(request_id, viz_path, haplotype_names, average_age):
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
         dot_filename_path = f'{output_path}/{dot_filename}'
         graphs = pydot.graph_from_dot_file(dot_filename_path)
         graph = graphs[0]
         graph.del_node('"\\n"')
-        subgraph = pydot.Subgraph(rank='same')
         for node in graph.get_nodes():
-            if node.get_name().replace('"', '') in haplotype_names:
-                subgraph.add_node(node)
-        graph.add_subgraph(subgraph)
+            attributes = node.get_attributes()
+            if ('shape' in attributes) and (attributes['shape'] == 'plaintext'):
+                label = attributes['label']
+                regex = re.compile('\"(\d*.\d*)\\\\n\+-(\d*.\d*)y\"')
+                result = regex.match(label)
+                new_value = float(average_age) + float(result.group(1))
+                new_label = regex.sub(f'"{str(new_value)}\\\\n+-\\2y"', label)
+                node.set('label', new_label)
         for edge in graph.get_edges():
             source = edge.get_source().replace('"', '')
             if source in haplotype_names:
@@ -232,6 +236,11 @@ def modify_dot(request_id, viz_path, haplotype_names):
                 replace_edge_source(graph, source, new_node)
                 replace_edge_destination(graph, source, new_node)
                 graph.add_edge(pydot.Edge(src=f'"{new_node}"', dst=f'"{source}"', arrowhead='none'))
+        subgraph = pydot.Subgraph(rank='same')
+        for node in graph.get_nodes():
+            if node.get_name().replace('"', '') in haplotype_names:
+                subgraph.add_node(node)
+        graph.add_subgraph(subgraph)
         graph.write(path=dot_filename_path, format='raw')
     print(f'DOT-file for RQ {request_id} modified.')
 
