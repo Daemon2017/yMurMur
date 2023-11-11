@@ -4,6 +4,7 @@ Remove-Item -Path "./murka"
 Move-Item -Path "./murka-1.4.1-win64/murka-1.4.1-win64" -Destination "./murka" -force
 Remove-Item -Path "./murka-1.4.1-win64.zip"
 Remove-Item -Path "./murka-1.4.1-win64"
+New-Item -ItemType File -Path ./murka/murka.rs -Value "42" -Force
 Invoke-WebRequest "https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/2.50.0/windows_10_msbuild_Release_graphviz-2.50.0-win32.zip" -OutFile "graphviz-2.50.0-win32.zip"
 Expand-Archive "graphviz-2.50.0-win32.zip" -DestinationPath "graphviz-2.50.0-win32"
 Move-Item -Path "./graphviz-2.50.0-win32/Graphviz" -Destination "./graphviz" -force
