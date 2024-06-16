@@ -22,6 +22,7 @@ function sendRequest() {
     xhr.setRequestHeader("ypg", document.getElementById("ypgID").value);
     xhr.setRequestHeader("amr", document.getElementById("amrID").value);
     xhr.setRequestHeader("aa", document.getElementById("aaID").value);
+    xhr.setRequestHeader("ia", document.getElementById("iaID").value);
     xhr.setRequestHeader("Content-Type", "text/plain");
 
     xhr.send(document.getElementById("textareaID").value);

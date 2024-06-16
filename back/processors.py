@@ -7,6 +7,7 @@ TREE_DIRECTION = 'rankdir'
 AVERAGE_MUTATION_RATE = 'amr'
 AVERAGE_AGE = 'aa'
 YEARS_PER_GENERATION = 'ypg'
+IMPROVE_APPERANCE = 'ia'
 
 
 def process_txt(request_id, prepared_rows, headers, modal_markers_count):
@@ -29,7 +30,8 @@ def process_dot(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path, modal_markers_count, headers[YEARS_PER_GENERATION], headers[AVERAGE_MUTATION_RATE])
     remove_extra_dot(viz_path)
-    modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
+    if headers[IMPROVE_APPERANCE] == "True":
+        modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
     create_zip(request_id, viz_path)
 
 
@@ -42,7 +44,8 @@ def process_png(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path, modal_markers_count, headers[YEARS_PER_GENERATION], headers[AVERAGE_MUTATION_RATE])
     remove_extra_dot(viz_path)
-    modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
+    if headers[IMPROVE_APPERANCE] == "True":
+        modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
     create_png(request_id, viz_path, headers[TREE_DIRECTION], modal_markers_count, len(haplotype_names))
     create_zip(request_id, viz_path)
 
@@ -56,6 +59,7 @@ def process_pdf(request_id, prepared_rows, headers, modal_markers_count, haploty
     create_rdf(request_id, seq_path)
     create_dot(request_id, seq_path, modal_markers_count, headers[YEARS_PER_GENERATION], headers[AVERAGE_MUTATION_RATE])
     remove_extra_dot(viz_path)
-    modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
+    if headers[IMPROVE_APPERANCE] == "True":
+        modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
     create_pdf(request_id, viz_path, headers[TREE_DIRECTION], modal_markers_count, len(haplotype_names))
     create_zip(request_id, viz_path)

@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+sudo -i
 apt-get update
 apt-get install software-properties-common -y
 add-apt-repository ppa:deadsnakes/ppa -y
