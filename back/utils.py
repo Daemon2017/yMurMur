@@ -1,9 +1,11 @@
+import multiprocessing
 import os
 import random
 import re
 import shutil
 import string
 import subprocess
+from itertools import repeat
 
 import pydot
 
@@ -220,12 +222,13 @@ def remove_extra_dot(viz_path):
 def modify_dot(request_id, viz_path, haplotype_names, average_age):
     print(f'Modifying DOT-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
-    for dot_filename in os.listdir(output_path):
-        process_dot(average_age, dot_filename, haplotype_names, output_path)
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+        pool.starmap(process_dot_modification,
+                     zip(repeat(average_age), os.listdir(output_path), repeat(haplotype_names), repeat(output_path)))
     print(f'DOT-file for RQ {request_id} modified.')
 
 
-def process_dot(average_age, dot_filename, haplotype_names, output_path):
+def process_dot_modification(average_age, dot_filename, haplotype_names, output_path):
     print(f'Processing file {dot_filename}...')
     dot_filename_path = f'{output_path}/{dot_filename}'
     graphs = pydot.graph_from_dot_file(dot_filename_path)
@@ -275,20 +278,24 @@ def replace_edge_source_and_destination(graph, old, new):
 def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     print(f'Creating PNG-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
-    for dot_filename in os.listdir(output_path):
-        process_graph(dot_filename, haplotypes_count, markers_count, output_path, rankdir, '.png', 'png')
-    print(f'PNG-file for RQ {request_id} created.')
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+        pool.starmap(process_graph_creation,
+                     zip(os.listdir(output_path), repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
+                         repeat(rankdir), repeat('.png'), repeat('png')))
+    print(f'PNG-files for RQ {request_id} created.')
 
 
 def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     print(f'Creating PDF-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
-    for dot_filename in os.listdir(output_path):
-        process_graph(dot_filename, haplotypes_count, markers_count, output_path, rankdir, '.pdf', 'pdf')
-    print(f'PDF-file for RQ {request_id} created.')
+    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+        pool.starmap(process_graph_creation,
+                     zip(os.listdir(output_path), repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
+                         repeat(rankdir), repeat('.pdf'), repeat('pdf')))
+    print(f'PDF-files for RQ {request_id} created.')
 
 
-def process_graph(dot_filename, haplotypes_count, markers_count, output_path, rankdir, output_extension, output_format):
+def process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path, rankdir, output_extension, output_format):
     print(f'Processing file {dot_filename}...')
     output_filename = dot_filename.replace('.dot', output_extension)
     dot_filename_path = f'{output_path}/{dot_filename}'
