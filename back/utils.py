@@ -115,12 +115,14 @@ def get_rho(markers_count, years_per_generation, avg_mutation_rate):
 
 
 def create_folder(request_id, path):
+    print(f'Creating folder {path} for RQ {request_id}...')
     os.makedirs(path,
                 exist_ok=True)
     print(f'Folder {path} for RQ {request_id} created.')
 
 
 def create_ych(body_rows, request_id, seq_path):
+    print(f'Creating YCH-file for RQ {request_id}...')
     with open(f'{seq_path}/request.ych',
               'w',
               encoding='utf-8') as text_file:
@@ -130,6 +132,7 @@ def create_ych(body_rows, request_id, seq_path):
 
 
 def create_rdf(request_id, seq_path):
+    print(f'Creating RDF-file for RQ {request_id}...')
     prepare_args = ''
     if os.name == 'nt':
         prepare_args = '{0}/murka/prepare.exe '.format(os.getcwd())
@@ -157,6 +160,7 @@ def create_rdf(request_id, seq_path):
 
 
 def create_txt(request_id, seq_path, markers_count, years_per_generation, avg_mutation_rate):
+    print(f'Creating TXT-file for RQ {request_id}...')
     murka_args = ''
     if os.name == 'nt':
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
@@ -181,6 +185,7 @@ def create_txt(request_id, seq_path, markers_count, years_per_generation, avg_mu
 
 
 def create_dot(request_id, seq_path, markers_count, years_per_generation, avg_mutation_rate):
+    print(f'Creating DOT-file for RQ {request_id}...')
     murka_args = ''
     if os.name == 'nt':
         murka_args = '{0}/murka/murka.exe '.format(os.getcwd())
@@ -213,8 +218,10 @@ def remove_extra_dot(viz_path):
 
 
 def modify_dot(request_id, viz_path, haplotype_names, average_age):
+    print(f'Modifying DOT-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
+        print(f'Processing file {dot_filename}...')
         dot_filename_path = f'{output_path}/{dot_filename}'
         graphs = pydot.graph_from_dot_file(dot_filename_path)
         graph = graphs[0]
@@ -270,8 +277,10 @@ def replace_edge_destination(graph, old_destination, new_destination):
 
 
 def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
+    print(f'Creating PNG-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
+        print(f'Processing file {dot_filename}...')
         output_filename = dot_filename.replace('.dot', '.png')
         dot_filename_path = f'{output_path}/{dot_filename}'
         graphs = pydot.graph_from_dot_file(dot_filename_path)
@@ -285,8 +294,10 @@ def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
 
 
 def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
+    print(f'Creating PDF-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
+        print(f'Processing file {dot_filename}...')
         output_filename = dot_filename.replace('.dot', '.pdf')
         dot_filename_path = f'{output_path}/{dot_filename}'
         graphs = pydot.graph_from_dot_file(dot_filename_path)
@@ -300,6 +311,7 @@ def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
 
 
 def create_zip(request_id, viz_path):
+    print(f'Creating ZIP-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     shutil.make_archive(f'{viz_path}/result',
                         'zip',
