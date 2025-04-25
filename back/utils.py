@@ -228,7 +228,7 @@ def modify_dot(request_id, viz_path, haplotype_names, average_age):
             pool.starmap(process_dot_modification,
                          zip(files_list, repeat(average_age), repeat(haplotype_names), repeat(output_path)))
     else:
-        for dot_filename in os.listdir(output_path):
+        for dot_filename in files_list:
             process_dot_modification(dot_filename, average_age, haplotype_names, output_path)
     print(f'DOT-file for RQ {request_id} modified.')
 
@@ -290,7 +290,7 @@ def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count,
                          zip(files_list, repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
                              repeat(rankdir), repeat(output_extension), repeat(output_format)))
     else:
-        for dot_filename in os.listdir(output_path):
+        for dot_filename in files_list:
             process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path,
                                    rankdir, output_extension, output_format)
     print(f'Graph files for RQ {request_id} created.')
