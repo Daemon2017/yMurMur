@@ -221,75 +221,62 @@ def modify_dot(request_id, viz_path, haplotype_names, average_age):
     print(f'Modifying DOT-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
-        print(f'Processing file {dot_filename}...')
-        dot_filename_path = f'{output_path}/{dot_filename}'
-        graphs = pydot.graph_from_dot_file(dot_filename_path)
-        graph = graphs[0]
-        graph.del_node('"\\n"')
-        for node in graph.get_nodes():
-            attributes = node.get_attributes()
-            if is_plaintext(attributes):
-                label = attributes['label']
-                regex = re.compile('\"(\d*.\d*)\\\\n\+-(\d*.\d*)y\"')
-                result = regex.match(label)
-                new_value = float(average_age) + float(result.group(1))
-                new_label = regex.sub(f'"{str(new_value)}\\\\n+-\\2y"', label)
-                node.set('label', new_label)
-        for edge in graph.get_edges():
-            source = edge.get_source().replace('"', '')
-            if source in haplotype_names:
-                new_node = ''.join(random.choices(string.ascii_letters, k=12))
-                graph.add_node(pydot.Node(name=f'"{new_node}"', label='', style='bold'))
-                replace_edge_source(graph, source, new_node)
-                replace_edge_destination(graph, source, new_node)
-                graph.add_edge(pydot.Edge(src=f'"{new_node}"', dst=f'"{source}"', arrowhead='none'))
-        subgraph = pydot.Subgraph(rank='same')
-        for node in graph.get_nodes():
-            if node.get_name().replace('"', '') in haplotype_names:
-                subgraph.add_node(node)
-        graph.add_subgraph(subgraph)
-        graph.write(path=dot_filename_path, format='raw')
+        process_dot(average_age, dot_filename, haplotype_names, output_path)
     print(f'DOT-file for RQ {request_id} modified.')
+
+
+def process_dot(average_age, dot_filename, haplotype_names, output_path):
+    print(f'Processing file {dot_filename}...')
+    dot_filename_path = f'{output_path}/{dot_filename}'
+    graphs = pydot.graph_from_dot_file(dot_filename_path)
+    graph = graphs[0]
+    graph.del_node('"\\n"')
+    for node in graph.get_nodes():
+        attributes = node.get_attributes()
+        if is_plaintext(attributes):
+            label = attributes['label']
+            regex = re.compile('\"(\d*.\d*)\\\\n\+-(\d*.\d*)y\"')
+            result = regex.match(label)
+            new_value = float(average_age) + float(result.group(1))
+            new_label = regex.sub(f'"{str(new_value)}\\\\n+-\\2y"', label)
+            node.set('label', new_label)
+    for edge in graph.get_edges():
+        source = edge.get_source().replace('"', '')
+        if source in haplotype_names:
+            new_node = ''.join(random.choices(string.ascii_letters, k=12))
+            graph.add_node(pydot.Node(name=f'"{new_node}"', label='', style='bold'))
+            replace_edge_source_and_destination(graph, source, new_node)
+            graph.add_edge(pydot.Edge(src=f'"{new_node}"', dst=f'"{source}"', arrowhead='none'))
+    subgraph = pydot.Subgraph(rank='same')
+    for node in graph.get_nodes():
+        if node.get_name().replace('"', '') in haplotype_names:
+            subgraph.add_node(node)
+    graph.add_subgraph(subgraph)
+    graph.write(path=dot_filename_path, format='raw')
 
 
 def is_plaintext(attributes):
     return ('shape' in attributes) and (attributes['shape'] == 'plaintext')
 
 
-def replace_edge_source(graph, old_source, new_source):
+def replace_edge_source_and_destination(graph, old, new):
     for edge in graph.get_edges():
         attributes = edge.get_attributes()
         source = edge.get_source().replace('"', '')
         destination = edge.get_destination().replace('"', '')
-        if source == old_source:
-            graph.del_edge(src_or_list=f'"{old_source}"', dst=f'"{destination}"')
-            graph.add_edge(pydot.Edge(src=f'"{new_source}"', dst=f'"{destination}"', **attributes))
-
-
-def replace_edge_destination(graph, old_destination, new_destination):
-    for edge in graph.get_edges():
-        attributes = edge.get_attributes()
-        source = edge.get_source().replace('"', '')
-        destination = edge.get_destination().replace('"', '')
-        if destination == old_destination:
-            graph.del_edge(src_or_list=f'"{source}"', dst=f'"{old_destination}"')
-            graph.add_edge(pydot.Edge(src=f'"{source}"', dst=f'"{new_destination}"', **attributes))
+        if source == old:
+            graph.del_edge(src_or_list=f'"{old}"', dst=f'"{destination}"')
+            graph.add_edge(pydot.Edge(src=f'"{new}"', dst=f'"{destination}"', **attributes))
+        if destination == old:
+            graph.del_edge(src_or_list=f'"{source}"', dst=f'"{old}"')
+            graph.add_edge(pydot.Edge(src=f'"{source}"', dst=f'"{new}"', **attributes))
 
 
 def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     print(f'Creating PNG-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
-        print(f'Processing file {dot_filename}...')
-        output_filename = dot_filename.replace('.dot', '.png')
-        dot_filename_path = f'{output_path}/{dot_filename}'
-        graphs = pydot.graph_from_dot_file(dot_filename_path)
-        graph = graphs[0]
-        graph.del_node('"\\n"')
-        graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
-        filename_path = f'{output_path}/{output_filename}'
-        graph.write(path=filename_path, format='png')
-        os.remove(dot_filename_path)
+        process_graph(dot_filename, haplotypes_count, markers_count, output_path, rankdir, '.png', 'png')
     print(f'PNG-file for RQ {request_id} created.')
 
 
@@ -297,17 +284,21 @@ def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
     print(f'Creating PDF-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     for dot_filename in os.listdir(output_path):
-        print(f'Processing file {dot_filename}...')
-        output_filename = dot_filename.replace('.dot', '.pdf')
-        dot_filename_path = f'{output_path}/{dot_filename}'
-        graphs = pydot.graph_from_dot_file(dot_filename_path)
-        graph = graphs[0]
-        graph.del_node('"\\n"')
-        graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
-        filename_path = f'{output_path}/{output_filename}'
-        graph.write(path=filename_path, format='pdf')
-        os.remove(dot_filename_path)
+        process_graph(dot_filename, haplotypes_count, markers_count, output_path, rankdir, '.pdf', 'pdf')
     print(f'PDF-file for RQ {request_id} created.')
+
+
+def process_graph(dot_filename, haplotypes_count, markers_count, output_path, rankdir, output_extension, output_format):
+    print(f'Processing file {dot_filename}...')
+    output_filename = dot_filename.replace('.dot', output_extension)
+    dot_filename_path = f'{output_path}/{dot_filename}'
+    graphs = pydot.graph_from_dot_file(dot_filename_path)
+    graph = graphs[0]
+    graph.del_node('"\\n"')
+    graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
+    filename_path = f'{output_path}/{output_filename}'
+    graph.write(path=filename_path, format=output_format)
+    os.remove(dot_filename_path)
 
 
 def create_zip(request_id, viz_path):
