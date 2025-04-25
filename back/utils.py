@@ -223,9 +223,13 @@ def modify_dot(request_id, viz_path, haplotype_names, average_age):
     print(f'Modifying DOT-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     files_list = os.listdir(output_path)
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-        pool.starmap(process_dot_modification,
-                     zip(files_list, repeat(average_age), repeat(haplotype_names), repeat(output_path)))
+    if os.name == 'nt':
+        with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+            pool.starmap(process_dot_modification,
+                         zip(files_list, repeat(average_age), repeat(haplotype_names), repeat(output_path)))
+    else:
+        for dot_filename in os.listdir(output_path):
+            process_dot_modification(dot_filename, average_age, haplotype_names, output_path)
     print(f'DOT-file for RQ {request_id} modified.')
 
 
@@ -280,10 +284,15 @@ def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count,
     print(f'Creating graph files for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     files_list = os.listdir(output_path)
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-        pool.starmap(process_graph_creation,
-                     zip(files_list, repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
-                         repeat(rankdir), repeat(output_extension), repeat(output_format)))
+    if os.name == 'nt':
+        with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+            pool.starmap(process_graph_creation,
+                         zip(files_list, repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
+                             repeat(rankdir), repeat(output_extension), repeat(output_format)))
+    else:
+        for dot_filename in os.listdir(output_path):
+            process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path,
+                                   rankdir, output_extension, output_format)
     print(f'Graph files for RQ {request_id} created.')
 
 
