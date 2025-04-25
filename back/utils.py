@@ -222,13 +222,14 @@ def remove_extra_dot(viz_path):
 def modify_dot(request_id, viz_path, haplotype_names, average_age):
     print(f'Modifying DOT-file for RQ {request_id}...')
     output_path = f'{viz_path}/output'
+    files_list = os.listdir(output_path)
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
         pool.starmap(process_dot_modification,
-                     zip(repeat(average_age), os.listdir(output_path), repeat(haplotype_names), repeat(output_path)))
+                     zip(files_list, repeat(average_age), repeat(haplotype_names), repeat(output_path)))
     print(f'DOT-file for RQ {request_id} modified.')
 
 
-def process_dot_modification(average_age, dot_filename, haplotype_names, output_path):
+def process_dot_modification(dot_filename, average_age, haplotype_names, output_path):
     print(f'Processing file {dot_filename}...')
     dot_filename_path = f'{output_path}/{dot_filename}'
     graphs = pydot.graph_from_dot_file(dot_filename_path)
@@ -278,9 +279,10 @@ def replace_edge_source_and_destination(graph, old, new):
 def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count, output_extension, output_format):
     print(f'Creating graph files for RQ {request_id}...')
     output_path = f'{viz_path}/output'
+    files_list = os.listdir(output_path)
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
         pool.starmap(process_graph_creation,
-                     zip(os.listdir(output_path), repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
+                     zip(files_list, repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
                          repeat(rankdir), repeat(output_extension), repeat(output_format)))
     print(f'Graph files for RQ {request_id} created.')
 
