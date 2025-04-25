@@ -275,27 +275,18 @@ def replace_edge_source_and_destination(graph, old, new):
             graph.add_edge(pydot.Edge(src=f'"{source}"', dst=f'"{new}"', **attributes))
 
 
-def create_png(request_id, viz_path, rankdir, markers_count, haplotypes_count):
-    print(f'Creating PNG-file for RQ {request_id}...')
+def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count, output_extension, output_format):
+    print(f'Creating graph files for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
         pool.starmap(process_graph_creation,
                      zip(os.listdir(output_path), repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
-                         repeat(rankdir), repeat('.png'), repeat('png')))
-    print(f'PNG-files for RQ {request_id} created.')
+                         repeat(rankdir), repeat(output_extension), repeat(output_format)))
+    print(f'Graph files for RQ {request_id} created.')
 
 
-def create_pdf(request_id, viz_path, rankdir, markers_count, haplotypes_count):
-    print(f'Creating PDF-file for RQ {request_id}...')
-    output_path = f'{viz_path}/output'
-    with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
-        pool.starmap(process_graph_creation,
-                     zip(os.listdir(output_path), repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
-                         repeat(rankdir), repeat('.pdf'), repeat('pdf')))
-    print(f'PDF-files for RQ {request_id} created.')
-
-
-def process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path, rankdir, output_extension, output_format):
+def process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path, rankdir, output_extension,
+                           output_format):
     print(f'Processing file {dot_filename}...')
     output_filename = dot_filename.replace('.dot', output_extension)
     dot_filename_path = f'{output_path}/{dot_filename}'
