@@ -1,4 +1,3 @@
-import multiprocessing
 import os
 import random
 import re
@@ -6,6 +5,7 @@ import shutil
 import string
 import subprocess
 from itertools import repeat
+from multiprocessing import Process, Pool, cpu_count
 
 import pydot
 
@@ -224,12 +224,17 @@ def modify_dot(request_id, viz_path, haplotype_names, average_age):
     output_path = f'{viz_path}/output'
     files_list = os.listdir(output_path)
     if os.name == 'nt':
-        with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+        with Pool(processes=cpu_count()) as pool:
             pool.starmap(process_dot_modification,
                          zip(files_list, repeat(average_age), repeat(haplotype_names), repeat(output_path)))
     else:
-        for dot_filename in files_list:
-            process_dot_modification(dot_filename, average_age, haplotype_names, output_path)
+        tasks = [Process(target=process_dot_modification,
+                         args=(dot_filename, average_age, haplotype_names, output_path,))
+                 for dot_filename in files_list]
+        for task in tasks:
+            task.start()
+        for task in tasks:
+            task.join()
     print(f'DOT-file for RQ {request_id} modified.')
 
 
@@ -241,7 +246,7 @@ def process_dot_modification(dot_filename, average_age, haplotype_names, output_
     graph.del_node('"\\n"')
     for node in graph.get_nodes():
         attributes = node.get_attributes()
-        if is_plaintext(attributes):
+        if ('shape' in attributes) and (attributes['shape'] == 'plaintext'):
             label = attributes['label']
             regex = re.compile('\"(\d*.\d*)\\\\n\+-(\d*.\d*)y\"')
             result = regex.match(label)
@@ -263,10 +268,6 @@ def process_dot_modification(dot_filename, average_age, haplotype_names, output_
     graph.write(path=dot_filename_path, format='raw')
 
 
-def is_plaintext(attributes):
-    return ('shape' in attributes) and (attributes['shape'] == 'plaintext')
-
-
 def replace_edge_source_and_destination(graph, old, new):
     for edge in graph.get_edges():
         attributes = edge.get_attributes()
@@ -285,14 +286,19 @@ def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count,
     output_path = f'{viz_path}/output'
     files_list = os.listdir(output_path)
     if os.name == 'nt':
-        with multiprocessing.Pool(processes=multiprocessing.cpu_count()) as pool:
+        with Pool(processes=cpu_count()) as pool:
             pool.starmap(process_graph_creation,
                          zip(files_list, repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
                              repeat(rankdir), repeat(output_extension), repeat(output_format)))
     else:
-        for dot_filename in files_list:
-            process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path,
-                                   rankdir, output_extension, output_format)
+        tasks = [Process(target=process_graph_creation,
+                         args=(dot_filename, haplotypes_count, markers_count, output_path,
+                               rankdir, output_extension, output_format,))
+                 for dot_filename in files_list]
+        for task in tasks:
+            task.start()
+        for task in tasks:
+            task.join()
     print(f'Graph files for RQ {request_id} created.')
 
 
