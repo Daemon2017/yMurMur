@@ -1,5 +1,4 @@
 import json
-import multiprocessing
 import os
 import uuid
 
@@ -131,7 +130,6 @@ def file_not_ready_error():
 
 
 if __name__ == '__main__':
-    multiprocessing.set_start_method('spawn')
     print('yMurMur ready!')
     serve(app,
           host='0.0.0.0',
