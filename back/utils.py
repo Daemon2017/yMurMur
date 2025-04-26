@@ -239,7 +239,6 @@ def modify_dot(request_id, viz_path, haplotype_names, average_age):
 
 
 def process_dot_modification(dot_filename, average_age, haplotype_names, output_path):
-    print(f'Modifying dot-file {dot_filename}...')
     dot_filename_path = f'{output_path}/{dot_filename}'
     graphs = pydot.graph_from_dot_file(dot_filename_path)
     graph = graphs[0]
@@ -304,7 +303,6 @@ def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count,
 
 def process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path, rankdir, output_extension,
                            output_format):
-    print(f'Creating graph {dot_filename}...')
     output_filename = dot_filename.replace('.dot', output_extension)
     dot_filename_path = f'{output_path}/{dot_filename}'
     graphs = pydot.graph_from_dot_file(dot_filename_path)
