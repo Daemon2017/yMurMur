@@ -57,11 +57,12 @@ murka_additional_args = '-T "MJ" ' \
 def get_from_raw(data):
     rows = data \
         .decode('utf-8') \
-        .replace('-', ',') \
-        .replace(',\t', ',') \
         .replace('\t', ',') \
-        .replace(', ', ',') \
+        .replace('    ', ',') \
+        .replace('   ', ',') \
+        .replace('  ', ',') \
         .replace(' ', ',') \
+        .replace('-', ',') \
         .splitlines()
     new_rows = [
         ','.join(['STR' + str(i) for i in range(len(rows[0].split(',')[1:]))]),
