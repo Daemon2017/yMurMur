@@ -58,7 +58,7 @@ def get_from_raw(data):
     rows = data \
         .decode('utf-8') \
         .replace('-', ',') \
-        .replace('\t,', ',') \
+        .replace(',\t', ',') \
         .replace('\t', ',') \
         .replace(', ', ',') \
         .replace(' ', ',') \
