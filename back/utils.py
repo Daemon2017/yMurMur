@@ -288,7 +288,7 @@ def replace_edge_source_and_destination(graph, old, new):
             graph.add_edge(pydot.Edge(src=f'"{source}"', dst=f'"{new}"', **attributes))
 
 
-def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count, output_extension, output_format):
+def create_graph(request_id, viz_path, tree_direction, markers_count, haplotypes_count, output_extension, output_format):
     print(f'Creating graph files for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     files_list = os.listdir(output_path)
@@ -296,11 +296,11 @@ def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count,
         with Pool(processes=cpu_count()) as pool:
             pool.starmap(process_graph_creation,
                          zip(files_list, repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
-                             repeat(rankdir), repeat(output_extension), repeat(output_format)))
+                             repeat(tree_direction), repeat(output_extension), repeat(output_format)))
     else:
         tasks = [Process(target=process_graph_creation,
                          args=(dot_filename, haplotypes_count, markers_count, output_path,
-                               rankdir, output_extension, output_format,))
+                               tree_direction, output_extension, output_format,))
                  for dot_filename in files_list]
         for task in tasks:
             task.start()
@@ -309,14 +309,14 @@ def create_graph(request_id, viz_path, rankdir, markers_count, haplotypes_count,
     print(f'Graph files for RQ {request_id} created.')
 
 
-def process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path, rankdir, output_extension,
+def process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path, tree_direction, output_extension,
                            output_format):
     output_filename = dot_filename.replace('.dot', output_extension)
     dot_filename_path = f'{output_path}/{dot_filename}'
     graphs = pydot.graph_from_dot_file(dot_filename_path)
     graph = graphs[0]
     graph.del_node('"\\n"')
-    graph.set_graph_defaults(rankdir=rankdir, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
+    graph.set_graph_defaults(rankdir=tree_direction, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
     filename_path = f'{output_path}/{output_filename}'
     graph.write(path=filename_path, format=output_format)
     os.remove(dot_filename_path)

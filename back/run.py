@@ -9,7 +9,7 @@ from waitress import serve
 from processors import process_txt, process_png, process_pdf, process_dot
 from utils import get_from_ych, get_markers_count, get_haplotype_names, is_same_size, get_from_raw
 
-RAW = 'raw'
+INPUT_FORMAT = 'InputFormat'
 
 APPLICATION_ZIP_MIMETYPE = 'application/zip'
 APPLICATION_JSON_MIMETYPE = 'application/json'
@@ -27,7 +27,7 @@ def request_txt():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_txt: {request_id}')
     rows = []
-    if request.headers[RAW] == "True":
+    if request.headers[INPUT_FORMAT] == "raw":
         rows = get_from_raw(request.data)
     else:
         rows = get_from_ych(request.data)
@@ -49,7 +49,7 @@ def request_dot():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_dot: {request_id}')
     rows = []
-    if request.headers[RAW] == "True":
+    if request.headers[INPUT_FORMAT] == "raw":
         rows = get_from_raw(request.data)
     else:
         rows = get_from_ych(request.data)
@@ -71,7 +71,7 @@ def request_png():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_png: {request_id}')
     rows = []
-    if request.headers[RAW] == "True":
+    if request.headers[INPUT_FORMAT] == "raw":
         rows = get_from_raw(request.data)
     else:
         rows = get_from_ych(request.data)
@@ -93,7 +93,7 @@ def request_pdf():
     request_id = str(uuid.uuid4())
     print(f'Received RQ request_pdf: {request_id}')
     rows = []
-    if request.headers[RAW] == "True":
+    if request.headers[INPUT_FORMAT] == "raw":
         rows = get_from_raw(request.data)
     else:
         rows = get_from_ych(request.data)

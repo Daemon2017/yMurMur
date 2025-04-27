@@ -17,12 +17,13 @@ function sendRequest() {
     }
     xhr.responseType = "arraybuffer";
 
-    xhr.open("POST", "https://bbak5ugcncih5o367egr.containers.yandexcloud.net/" + document.getElementById("formatID").value);
-    xhr.setRequestHeader("rankdir", document.getElementById("directionID").value);
-    xhr.setRequestHeader("ypg", document.getElementById("ypgID").value);
-    xhr.setRequestHeader("amr", document.getElementById("amrID").value);
-    xhr.setRequestHeader("aa", document.getElementById("aaID").value);
-    xhr.setRequestHeader("ia", document.getElementById("iaID").value);
+    xhr.open("POST", "https://bbak5ugcncih5o367egr.containers.yandexcloud.net/" + document.getElementById("outputFormatID").value);
+    xhr.setRequestHeader("TreeDirection", document.getElementById("treeDirectionID").value);
+    xhr.setRequestHeader("YearsPerGeneration", document.getElementById("yearsPerGenerationID").value);
+    xhr.setRequestHeader("AverageMutationRate", document.getElementById("averageMutationRateID").value);
+    xhr.setRequestHeader("AverageAge", document.getElementById("averageAgeID").value);
+    xhr.setRequestHeader("ImproveAppearance", document.getElementById("improveAppearanceID").value);
+    xhr.setRequestHeader("InputFormat", document.getElementById("inputFormatID").value);
     xhr.setRequestHeader("Content-Type", "text/plain");
 
     xhr.send(document.getElementById("textareaID").value);

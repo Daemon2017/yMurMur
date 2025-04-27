@@ -11,13 +11,18 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "ypg",
+						"key": "YearsPerGeneration",
 						"value": "33",
 						"type": "default"
 					},
 					{
-						"key": "amr",
+						"key": "AverageMutationRate",
 						"value": "0.0024",
+						"type": "default"
+					},
+					{
+						"key": "InputFormat",
+						"value": "ych",
 						"type": "default"
 					}
 				],
@@ -45,28 +50,33 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "rankdir",
-						"value": "TB",
+						"key": "TreeDirection",
+						"value": "LR",
 						"type": "default"
 					},
 					{
-						"key": "ypg",
+						"key": "YearsPerGeneration",
 						"value": "33",
 						"type": "default"
 					},
 					{
-						"key": "amr",
+						"key": "AverageMutationRate",
 						"value": "0.0024",
 						"type": "default"
 					},
 					{
-						"key": "aa",
+						"key": "AverageAge",
 						"value": "40.0",
 						"type": "default"
 					},
 					{
-						"key": "ia",
+						"key": "ImproveAppearance",
 						"value": "False",
+						"type": "default"
+					},
+					{
+						"key": "InputFormat",
+						"value": "ych",
 						"type": "default"
 					}
 				],
@@ -94,28 +104,33 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "rankdir",
-						"value": "TB",
+						"key": "TreeDirection",
+						"value": "LR",
 						"type": "default"
 					},
 					{
-						"key": "ypg",
+						"key": "YearsPerGeneration",
 						"value": "33",
 						"type": "default"
 					},
 					{
-						"key": "amr",
+						"key": "AverageMutationRate",
 						"value": "0.0024",
 						"type": "default"
 					},
 					{
-						"key": "aa",
+						"key": "AverageAge",
 						"value": "40.0",
 						"type": "default"
 					},
 					{
-						"key": "ia",
+						"key": "ImproveAppearance",
 						"value": "False",
+						"type": "default"
+					},
+					{
+						"key": "InputFormat",
+						"value": "ych",
 						"type": "default"
 					}
 				],
@@ -143,28 +158,33 @@
 				"method": "POST",
 				"header": [
 					{
-						"key": "rankdir",
-						"value": "TB",
+						"key": "TreeDirection",
+						"value": "LR",
 						"type": "default"
 					},
 					{
-						"key": "ypg",
+						"key": "YearsPerGeneration",
 						"value": "33",
 						"type": "default"
 					},
 					{
-						"key": "amr",
+						"key": "AverageMutationRate",
 						"value": "0.0024",
 						"type": "default"
 					},
 					{
-						"key": "aa",
+						"key": "AverageAge",
 						"value": "40.0",
 						"type": "default"
 					},
 					{
-						"key": "ia",
+						"key": "ImproveAppearance",
 						"value": "False",
+						"type": "default"
+					},
+					{
+						"key": "InputFormat",
+						"value": "ych",
 						"type": "default"
 					}
 				],

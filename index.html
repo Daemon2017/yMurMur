@@ -53,14 +53,28 @@
         </div>
         <div class="row">
             <div class="column">
-                <label for="formatID">Выходной формат: </label>
+                <label for="inputFormatID">Входной формат: </label>
             </div>
             <div class="column">
-                <label for="formatID">Output format: </label>
+                <label for="inputFormatID">Input format: </label>
             </div>
         </div>
         <div class="center">
-            <select id="formatID" style="width: 100%">
+            <select id="inputFormatID" style="width: 100%">
+                <option value="ych">YCH</option>
+                <option value="raw">RAW</option>
+            </select>
+        </div>
+        <div class="row">
+            <div class="column">
+                <label for="outputFormatID">Выходной формат: </label>
+            </div>
+            <div class="column">
+                <label for="outputFormatID">Output format: </label>
+            </div>
+        </div>
+        <div class="center">
+            <select id="outputFormatID" style="width: 100%">
                 <option value="request_pdf">.pdf</option>
                 <option value="request_png">.png</option>
                 <option value="request_dot">.dot</option>
@@ -69,34 +83,34 @@
         </div>
         <div class="row">
             <div class="column">
-                <label for="directionID">Ориентация древа: </label>
+                <label for="treeDirectionID">Ориентация древа: </label>
             </div>
             <div class="column">
-                <label for="directionID">Tree direction: </label>
+                <label for="treeDirectionID">Tree direction: </label>
             </div>
         </div>
         <div class="center">
-            <select id="directionID" style="width: 100%">
-                <option value="TB">Top to bottom</option>
-                <option value="BT">Bottom to top</option>
-                <option value="RL">Right to left</option>
+            <select id="treeDirectionID" style="width: 100%">
                 <option value="LR">Left to right</option>
+                <option value="RL">Right to left</option>
+                <option value="BT">Bottom to top</option>
+                <option value="TB">Top to bottom</option>
             </select>
         </div>
         <div class="row">
             <div class="column">
-                <label for="ypgID">Лет/поколение: </label>
+                <label for="yearsPerGenerationID">Лет/поколение: </label>
             </div>
             <div class="column">
-                <label for="ypgID">Years/generation: </label>
+                <label for="yearsPerGenerationID">Years/generation: </label>
             </div>
         </div>
         <div class="center">
-            <textarea id="ypgID" rows="1" wrap="off" style="width: 100%">33.0</textarea>
+            <textarea id="yearsPerGenerationID" rows="1" wrap="off" style="width: 100%">33.0</textarea>
         </div>
         <div class="row">
             <div class="column">
-                <label for="amrID">Средняя частота мутаций: </label>
+                <label for="averageMutationRateID">Средняя частота мутаций: </label>
                 <br>Y12 - 0.0020
                 <br>Y25 - 0.0026
                 <br>Y37 - 0.0042
@@ -104,45 +118,45 @@
                 <br>Y111 - 0.0026
             </div>
             <div class="column">
-                <label for="amrID">Average mutation rate: </label>
+                <label for="averageMutationRateID">Average mutation rate: </label>
             </div>
         </div>
         <div class="center">
-            <textarea id="amrID" rows="1" wrap="off" style="width: 100%">0.0024</textarea>
+            <textarea id="averageMutationRateID" rows="1" wrap="off" style="width: 100%">0.0024</textarea>
         </div>
         <div class="row">
             <div class="column">
-                <label for="iaID">Улучшать внешний вид древа: </label>
+                <label for="improveAppearanceID">Улучшать внешний вид древа: </label>
             </div>
             <div class="column">
-                <label for="iaID">Improve the appearance of the tree: </label>
+                <label for="improveAppearanceID">Improve the appearance of the tree: </label>
             </div>
         </div>
         <div class="center">
-            <select id="iaID" style="width: 100%">
+            <select id="improveAppearanceID" style="width: 100%">
                 <option value="True">Yes</option>
                 <option value="False">No</option>
             </select>
         </div>
         <div class="row">
             <div class="column">
-                <label for="aaID">Средний возраст протестированных: </label>
+                <label for="averageAgeID">Средний возраст протестированных: </label>
             </div>
             <div class="column">
-                <label for="aaID">Average age of tested: </label>
+                <label for="averageAgeID">Average age of tested: </label>
             </div>
         </div>
         <div class="center">
-            <textarea id="aaID" rows="1" wrap="off" style="width: 100%">40.0</textarea>
+            <textarea id="averageAgeID" rows="1" wrap="off" style="width: 100%">40.0</textarea>
         </div>
         <div class="row">
             <div class="column">
                 Предупреждение: подготовка ответа может занять до 10 минут. Загрузка
-                ZIP-файла начнется автоматически. Дистанции в файлах указаны в годах.
+                ZIP-файла начнется автоматически.
             </div>
             <div class="column">
                 Warning: it may take up to 10 minutes to prepare a response. The
-                download of the ZIP file will start automatically. The distances in the files are given in years.
+                download of the ZIP file will start automatically.
             </div>
         </div>
         <div>
