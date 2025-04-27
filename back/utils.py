@@ -9,11 +9,6 @@ from multiprocessing import Process, Pool, cpu_count
 
 import pydot
 
-markers_names = '393,390,D19,391,385a,385b,426,388,439,3891,392,3892,458,459a,459b,455,454,447,437,448,449,464a,464b,' \
-                '464c,464d,460,GATA,YCAa,YCAb,456,607,576,570,CDYa,CDYb,442,438,531,578,395a,395b,590,537,641,472,' \
-                '406,511,425,413a,413b,557,594,436,490,534,450,444,481,520,446,617,568,487,572,640,492,565,710,485,' \
-                '632,495,540,714,716,717,505,556,549,589,522,494,533,636,575,638,462,452,445,YGATAA10,463,441,' \
-                'YGGAAT1B07,525,712,593,650,532,715,504,513,561,552,726,635,587,643,497,510,434,461,435'
 murka_additional_args = '-T "MJ" ' \
                         '-S "VB|RSW|RSR|EM|THR2" ' \
                         '-V "VP|VL|VR" ' \
@@ -59,12 +54,34 @@ murka_additional_args = '-T "MJ" ' \
                         '-L "topotbl" '
 
 
-def get_rows(data):
+def get_from_raw(data):
+    rows = data \
+        .decode('utf-8') \
+        .replace('-', ',') \
+        .replace('\t,', ',') \
+        .replace('\t', ',') \
+        .replace(', ', ',') \
+        .replace(' ', ',') \
+        .splitlines()
+    new_rows = [
+        ','.join(['STR' + str(i) for i in range(len(rows[0].split(',')[1:]))]),
+        '',
+        ''
+    ]
+    for row in rows:
+        splitted_row = row.split(',')
+        new_rows.append(splitted_row[0])
+        new_rows.append(','.join(splitted_row[1:]))
+        new_rows.append(1)
+    return new_rows
+
+
+def get_from_ych(data):
     rows = data \
         .decode('utf-8') \
         .replace(', ', ',') \
         .splitlines()
-
+    del rows[3:6]
     markers_columns = rows[0].split(',')
     for i, row in enumerate(rows):
         if i > 0:
@@ -80,33 +97,27 @@ def get_rows(data):
                     else:
                         values.extend([column_values[-1]])
                 rows[i] = ','.join(values)
+    rows[0] = ','.join(['STR' + str(i) for i in range(get_markers_count(rows))])
     return rows
 
 
-def get_modal_markers_count(prepared_rows):
-    return len(prepared_rows[4].split(','))
+def get_markers_count(rows):
+    return len(rows[4].split(','))
 
 
-def get_haplotype_names(prepared_rows):
+def get_haplotype_names(rows):
     haplotype_names = []
-    for i in range(6, len(prepared_rows), 3):
-        haplotype_names.append(prepared_rows[i])
+    for i in range(3, len(rows), 3):
+        haplotype_names.append(rows[i])
     return haplotype_names
 
 
-def is_same_size(prepared_rows, modal_markers_count):
-    for i in range(7, len(prepared_rows), 3):
-        splitted_row = prepared_rows[i].split(',')
-        if len(splitted_row) != modal_markers_count:
+def is_same_size(rows, markers_count):
+    for i in range(4, len(rows), 3):
+        splitted_row = rows[i].split(',')
+        if len(splitted_row) != markers_count:
             return False
     return True
-
-
-def get_prepared_rows(rows, modal_markers_count):
-    rows[0] = ','.join(markers_names.split(',')[:modal_markers_count])
-    rows[1] = ''
-    del rows[3:6]
-    return rows
 
 
 def get_rho(markers_count, years_per_generation, avg_mutation_rate):
