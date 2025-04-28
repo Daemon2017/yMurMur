@@ -57,31 +57,43 @@ murka_additional_args = '-T "MJ" ' \
 def get_from_raw(data):
     rows = data \
         .decode('utf-8') \
-        .replace('\t', ',') \
-        .replace('    ', ',') \
-        .replace('   ', ',') \
-        .replace('  ', ',') \
-        .replace(' ', ',') \
-        .replace('-', ',') \
         .splitlines()
+    for i in range(len(rows)):
+        rows[i] = rows[i] \
+            .rstrip('\t -') \
+            .replace('\t', ',') \
+            .replace('    ', ',') \
+            .replace('   ', ',') \
+            .replace('  ', ',') \
+            .replace(' ', ',') \
+            .replace('-', ',')
     new_rows = [
         ','.join(['STR' + str(i) for i in range(len(rows[0].split(',')[1:]))]),
         '',
         ''
     ]
+    haplotype_names = []
     for row in rows:
         splitted_row = row.split(',')
-        new_rows.append(splitted_row[0])
-        new_rows.append(','.join(splitted_row[1:]))
-        new_rows.append(1)
+        haplotype_name = splitted_row[0]
+        if haplotype_name not in haplotype_names:
+            new_rows.append(haplotype_name)
+            markers_row = []
+            for marker in splitted_row[1:]:
+                markers_row.append(str(round(float(marker))))
+            new_rows.append(','.join(markers_row))
+            new_rows.append(1)
+            haplotype_names.append(haplotype_name)
     return new_rows
 
 
 def get_from_ych(data):
     rows = data \
         .decode('utf-8') \
-        .replace(', ', ',') \
         .splitlines()
+    for i in range(len(rows)):
+        rows[i] = rows[i] \
+            .replace(', ', ',')
     del rows[3:6]
     markers_columns = rows[0].split(',')
     for i, row in enumerate(rows):
@@ -289,7 +301,8 @@ def replace_edge_source_and_destination(graph, old, new):
             graph.add_edge(pydot.Edge(src=f'"{source}"', dst=f'"{new}"', **attributes))
 
 
-def create_graph(request_id, viz_path, tree_direction, markers_count, haplotypes_count, output_extension, output_format):
+def create_graph(request_id, viz_path, tree_direction, markers_count, haplotypes_count, output_extension,
+                 output_format):
     print(f'Creating graph files for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     files_list = os.listdir(output_path)
