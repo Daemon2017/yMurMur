@@ -58,6 +58,7 @@ def get_from_raw(data):
     rows = data \
         .decode('utf-8') \
         .splitlines()
+    rows = list(filter(None, rows))
     for i in range(len(rows)):
         rows[i] = rows[i] \
             .rstrip('\t -') \
