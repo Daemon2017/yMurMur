@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import random
 import re
@@ -303,7 +304,7 @@ def replace_edge_source_and_destination(graph, old, new):
 
 
 def create_graph(request_id, viz_path, tree_direction, markers_count, haplotypes_count, output_extension,
-                 output_format):
+                 output_format, years_per_generation, avg_mutation_rate):
     print(f'Creating graph files for RQ {request_id}...')
     output_path = f'{viz_path}/output'
     files_list = os.listdir(output_path)
@@ -311,11 +312,13 @@ def create_graph(request_id, viz_path, tree_direction, markers_count, haplotypes
         with Pool(processes=cpu_count()) as pool:
             pool.starmap(process_graph_creation,
                          zip(files_list, repeat(haplotypes_count), repeat(markers_count), repeat(output_path),
-                             repeat(tree_direction), repeat(output_extension), repeat(output_format)))
+                             repeat(tree_direction), repeat(output_extension), repeat(output_format),
+                             repeat(years_per_generation), repeat(avg_mutation_rate)))
     else:
         tasks = [Process(target=process_graph_creation,
                          args=(dot_filename, haplotypes_count, markers_count, output_path,
-                               tree_direction, output_extension, output_format,))
+                               tree_direction, output_extension, output_format,
+                               years_per_generation, avg_mutation_rate))
                  for dot_filename in files_list]
         for task in tasks:
             task.start()
@@ -325,13 +328,14 @@ def create_graph(request_id, viz_path, tree_direction, markers_count, haplotypes
 
 
 def process_graph_creation(dot_filename, haplotypes_count, markers_count, output_path, tree_direction, output_extension,
-                           output_format):
+                           output_format, years_per_generation, avg_mutation_rate):
     output_filename = dot_filename.replace('.dot', output_extension)
     dot_filename_path = f'{output_path}/{dot_filename}'
     graphs = pydot.graph_from_dot_file(dot_filename_path)
     graph = graphs[0]
     graph.del_node('"\\n"')
-    graph.set_graph_defaults(rankdir=tree_direction, label=f'Y{markers_count}, {haplotypes_count} haplotypes')
+    graph.set_graph_defaults(rankdir=tree_direction,
+                             label=f'{datetime.now().date()}: {markers_count} STRs, {haplotypes_count} haplotypes, {years_per_generation} yr/gen, {avg_mutation_rate} amr')
     filename_path = f'{output_path}/{output_filename}'
     graph.write(path=filename_path, format=output_format)
     os.remove(dot_filename_path)

@@ -47,7 +47,7 @@ def process_png(request_id, prepared_rows, headers, modal_markers_count, haploty
     if headers[IMPROVE_APPEARANCE] == "True":
         modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
     create_graph(request_id, viz_path, headers[TREE_DIRECTION], modal_markers_count, len(haplotype_names),
-                 '.png', 'png')
+                 '.png', 'png', headers[YEARS_PER_GENERATION], headers[AVERAGE_MUTATION_RATE])
     create_zip(request_id, viz_path)
 
 
@@ -63,5 +63,5 @@ def process_pdf(request_id, prepared_rows, headers, modal_markers_count, haploty
     if headers[IMPROVE_APPEARANCE] == "True":
         modify_dot(request_id, viz_path, haplotype_names, headers[AVERAGE_AGE])
     create_graph(request_id, viz_path, headers[TREE_DIRECTION], modal_markers_count, len(haplotype_names),
-                 '.pdf', 'pdf')
+                 '.pdf', 'pdf', headers[YEARS_PER_GENERATION], headers[AVERAGE_MUTATION_RATE])
     create_zip(request_id, viz_path)
