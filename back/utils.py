@@ -1,10 +1,10 @@
-from datetime import datetime
 import os
 import random
 import re
 import shutil
 import string
 import subprocess
+from datetime import datetime
 from itertools import repeat
 from multiprocessing import Process, Pool, cpu_count
 
@@ -272,8 +272,9 @@ def process_dot_modification(dot_filename, average_age, haplotype_names, output_
             label = attributes['label']
             regex = re.compile('\"(\d*.\d*)\\\\n\+-(\d*.\d*)y\"')
             result = regex.match(label)
-            new_value = float(average_age) + float(result.group(1))
-            new_label = regex.sub(f'"{str(new_value)}\\\\n+-\\2y"', label)
+            new_expectation = round(float(average_age)) + round(float(result.group(1)))
+            new_dispersion = round(float(result.group(2)))
+            new_label = regex.sub(f'"{str(new_expectation)}\\\\n+-{str(new_dispersion)}y"', label)
             node.set('label', new_label)
     for edge in graph.get_edges():
         source = edge.get_source().replace('"', '')
