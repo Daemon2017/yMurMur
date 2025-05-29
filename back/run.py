@@ -6,7 +6,7 @@ from flask import Flask, Response, request, send_file
 from flask_cors import CORS
 from waitress import serve
 
-from processors import process_txt, process_png, process_pdf, process_dot
+from processors import process_txt, process_png, process_pdf, process_dot, process_jpg
 from utils import get_from_ych, get_markers_count, get_haplotype_names, is_same_size, get_from_raw
 
 INPUT_FORMAT = 'InputFormat'
@@ -60,6 +60,28 @@ def request_dot():
     if len(haplotype_names) <= 1:
         return haplotypes_count_error()
     process_dot(request_id, rows, request.headers, markers_count, haplotype_names)
+    file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
+    if not os.path.exists(file_path):
+        return file_not_ready_error()
+    return send_file(file_path, mimetype=APPLICATION_ZIP_MIMETYPE)
+
+
+@app.route('/request_jpg', methods=['POST'])
+def request_jpg():
+    request_id = str(uuid.uuid4())
+    print(f'Received RQ request_png: {request_id}')
+    rows = []
+    if request.headers[INPUT_FORMAT] == "raw":
+        rows = get_from_raw(request.data)
+    else:
+        rows = get_from_ych(request.data)
+    markers_count = get_markers_count(rows)
+    if not is_same_size(rows, markers_count):
+        return haplotypes_size_error()
+    haplotype_names = get_haplotype_names(rows)
+    if len(haplotype_names) <= 1:
+        return haplotypes_count_error()
+    process_jpg(request_id, rows, request.headers, markers_count, haplotype_names)
     file_path = f'{os.getcwd()}/murka/nw/viz/{request_id}/result.zip'
     if not os.path.exists(file_path):
         return file_not_ready_error()

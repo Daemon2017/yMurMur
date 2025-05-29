@@ -218,7 +218,7 @@ def create_dot(request_id, seq_path, markers_count, years_per_generation, avg_mu
         murka_args = '{0}/murka/murka/murka '.format(os.getcwd())
     murka_args += murka_additional_args
     murka_args += '-r "{0}/murka/data/metric/states_str0050ineq_2_2" ' \
-                  '-G "GraphViz; 1; ROOTPREFERRED|TXNAMES|ROOTONLY|TREEONLY|NOPOOL|AGE; 1.8; 1.1; 0.1; 2.0; 86.0; ; ; ; viz/{1}/output/nw#.dot; ; viz/tpl/nwtpl.txt; ; " ' \
+                  '-G "GraphViz; 1; ROOTPREFERRED|TXNAMES|ROOTONLY|TREEONLY|NOPOOL|AGE; 1.8; 1.1; 0.1; 2.0; 75.0; ; ; ; viz/{1}/output/nw#.dot; ; viz/tpl/nwtpl.txt; ; " ' \
                   '-i "{2}/request.rdf" ' \
                   '-N {3} ' \
         .format(os.getcwd(), request_id, seq_path, get_rho(markers_count, years_per_generation, avg_mutation_rate))
