@@ -1,7 +1,7 @@
 import os
 
-from utils import create_folder, create_ych, create_rdf, create_txt, create_dot, create_graph, create_zip, \
-    modify_dot, remove_extra_dot
+from creators import create_ych, create_rdf, create_txt, create_dot
+from utils import create_folder, create_graph, create_zip, modify_dot, remove_extra_dot
 
 TREE_DIRECTION = 'TreeDirection'
 AVERAGE_MUTATION_RATE = 'AverageMutationRate'
